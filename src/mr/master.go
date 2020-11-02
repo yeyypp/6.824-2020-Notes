@@ -6,13 +6,39 @@ import "os"
 import "net/rpc"
 import "net/http"
 
+type MapTask struct {
+	FileName string
+	Content  string
+	State    int
+}
+
+type ReduceTask struct {
+}
+
 type Master struct {
 	// Your definitions here.
-
+	MapTaskList    []MapTask
+	ReduceTaskList []ReduceTask
+	WorkerList     []Worker
 }
 
 // Your code here -- RPC handlers for the worker to call.
-
+func (m *Master) Job(args *JobArgs, reply *JobReply) error {
+	if args.Job == "map" {
+		for i, v := range MapTaskList {
+			if (v.State == 0) {
+				reply.Task = v
+				return nil
+			}
+		}
+	if args.Job == "reduce" {
+		for i, v := range ReduceTaskList {
+			if (v.State == 0) {
+				reply.Task = v
+				return nil
+			}
+		}
+}
 //
 // an example RPC handler.
 //

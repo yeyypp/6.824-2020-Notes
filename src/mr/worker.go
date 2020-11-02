@@ -13,6 +13,15 @@ type KeyValue struct {
 	Value string
 }
 
+type MapReply struct {
+	FileName string
+	Content  string
+}
+
+type JobArgs struct {
+	Job string
+}
+
 //
 // use ihash(key) % NReduce to choose the reduce
 // task number for each KeyValue emitted by Map.
@@ -30,9 +39,15 @@ func Worker(mapf func(string, string) []KeyValue,
 	reducef func(string, []string) string) {
 
 	// Your worker implementation here.
+	args := JobArgs{}
+	args.Job = "map"
+	reply := MapReply{}
+	call("Master.map", &args, &reply)
+
+	tem := mapf(reply.FileName, reply.Content)
 
 	// uncomment to send the Example RPC to the master.
-	CallExample()
+	//	CallExample()
 
 }
 
