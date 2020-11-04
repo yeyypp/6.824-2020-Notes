@@ -13,14 +13,12 @@ type KeyValue struct {
 	Value string
 }
 
-type MapReply struct {
-	FileName string
-	Content  string
-}
-
 type JobArgs struct {
 	Job string
 }
+
+type JobReply struct {
+
 
 //
 // use ihash(key) % NReduce to choose the reduce
