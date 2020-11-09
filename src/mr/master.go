@@ -6,40 +6,26 @@ import "os"
 import "net/rpc"
 import "net/http"
 
-type MapTask struct {
+type Task struct {
 	FileName string
-	Content  string
-	State    int
-}
-
-type ReduceTask struct {
+	State string
 }
 
 type Master struct {
 	// Your definitions here.
-	MapTaskList    []MapTask
-	ReduceTaskList []ReduceTask
-	WorkerList     []Worker
+	TaskList []Task
 }
 
 // Your code here -- RPC handlers for the worker to call.
 func (m *Master) Job(args *JobArgs, reply *JobReply) error {
-	if args.Job == "map" {
-		for i, v := range MapTaskList {
-			if (v.State == 0) {
-				reply.Task = v
-				return nil
-			}
+	for _, task := TaskList {
+		if task.State == "idle" {
+			reply.task = task
+			return nil
 		}
-	if args.Job == "reduce" {
-		for i, v := range ReduceTaskList {
-			if (v.State == 0) {
-				reply.Task = v
-				return nil
-			}
-		}
+	}
 }
-//
+//								
 // an example RPC handler.
 //
 // the RPC argument and reply types are defined in rpc.go.

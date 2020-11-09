@@ -18,7 +18,9 @@ type JobArgs struct {
 }
 
 type JobReply struct {
-
+	Phase string
+	File  string
+}
 
 //
 // use ihash(key) % NReduce to choose the reduce
@@ -37,16 +39,54 @@ func Worker(mapf func(string, string) []KeyValue,
 	reducef func(string, []string) string) {
 
 	// Your worker implementation here.
-	args := JobArgs{}
-	args.Job = "map"
-	reply := MapReply{}
-	call("Master.map", &args, &reply)
 
-	tem := mapf(reply.FileName, reply.Content)
+	args := &JobArgs{"job"}
+	reply := &JobReply{}
 
+	hasJob := call("Master.Job", args, reply)
+	if !hasJob {
+		return
+	}
+
+	switch reply.Phase {
+	case "Map":
+		doMap()
+	case "Reduce":
+		doReduce()
+	}
 	// uncomment to send the Example RPC to the master.
 	//	CallExample()
 
+}
+
+func doMap(mapf func(string, string) []KeyValue, fileName string, reply JobReply, NReduce int) {
+	file, err := os.Open(fileName)
+	if err != nil {
+		log.Fatalf("cannot open %v", fileName)
+	}
+	content, err := ioutil.ReadAll(file)
+	if err != nil {
+		log.Fatalf("cannot read %v", fileName)
+	}
+	file.Close()
+	kva := mapf(fileName, string(content))
+
+	X := strconv.Itoa(reply.task.TaskNum)
+	for _, kv := range kva {
+		tem := kv
+		key := kv.Key
+		Y := strconv.Itoa(ihash(key) % NReduce)
+		interFile := "mr" + X + "-" Y
+		ofile, _ := os.Create(interFile)
+		enc := json.NewEncoder(ofile)
+		err := enc.Encode(&tem)
+		ofile.Close()
+	}
+
+
+}
+
+func doReduce() {
 }
 
 //
