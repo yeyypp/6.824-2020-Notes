@@ -5,27 +5,47 @@ import "net"
 import "os"
 import "net/rpc"
 import "net/http"
+import "sync"
 
 type Task struct {
-	FileName string
-	State string
+	TaskNum int
+	File    string
+	State   string
 }
 
 type Master struct {
 	// Your definitions here.
+	mu       sync.Mutex
 	TaskList []Task
+	NReduce  int
 }
 
 // Your code here -- RPC handlers for the worker to call.
-func (m *Master) Job(args *JobArgs, reply *JobReply) error {
-	for _, task := TaskList {
-		if task.State == "idle" {
+func (m *Master) Job(args *Args, reply *Reply) error {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	for _, task := range TaskList {
+		if task.State == "Idle" {
 			reply.task = task
+			reply.NReduce = m.NReduce
 			return nil
 		}
 	}
 }
-//								
+
+func (m *Master) State(args *Args, reply *Reply) error {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	for _, task := range TaskList {
+		if task.TaskNum == args.TaskNum {
+			task.State = args.State
+			task.File = args.File
+			return nil
+		}
+	}
+}
+
+//
 // an example RPC handler.
 //
 // the RPC argument and reply types are defined in rpc.go.
@@ -56,10 +76,17 @@ func (m *Master) server() {
 // if the entire job has finished.
 //
 func (m *Master) Done() bool {
-	ret := false
+	ret := true
 
 	// Your code here.
-
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	for _, task := range m.TaskList {
+		if task.State != "Finish" {
+			ret = false
+			break
+		}
+	}
 	return ret
 }
 
@@ -69,7 +96,16 @@ func (m *Master) Done() bool {
 // nReduce is the number of reduce tasks to use.
 //
 func MakeMaster(files []string, nReduce int) *Master {
+
 	m := Master{}
+	TaskList := []Task{}
+	for i, file := range files {
+		task := Task{i, file, "Idle"}
+		TaskList[i] = task
+	}
+
+	m.TaskList = TaskList
+	m.NReduce = nReduce
 
 	// Your code here.
 

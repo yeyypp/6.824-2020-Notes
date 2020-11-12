@@ -4,6 +4,7 @@ import "fmt"
 import "log"
 import "net/rpc"
 import "hash/fnv"
+import "os"
 
 //
 // Map functions return a slice of KeyValue.
@@ -13,13 +14,16 @@ type KeyValue struct {
 	Value string
 }
 
-type JobArgs struct {
-	Job string
+type Args struct {
+	TaskNum int
+	File    string
+	State   string
 }
 
-type JobReply struct {
-	Phase string
-	File  string
+type Reply struct {
+	Phase   string
+	CurTask Task
+	NReduec int
 }
 
 //
@@ -39,27 +43,28 @@ func Worker(mapf func(string, string) []KeyValue,
 	reducef func(string, []string) string) {
 
 	// Your worker implementation here.
+	args := Args{State: "AskForJob"}
+	reply := Reply{}
 
-	args := &JobArgs{"job"}
-	reply := &JobReply{}
-
-	hasJob := call("Master.Job", args, reply)
+	hasJob := call("Master.Job", &args, &reply)
 	if !hasJob {
 		return
 	}
 
 	switch reply.Phase {
 	case "Map":
-		doMap()
+		doMap(mapf, &reply)
 	case "Reduce":
-		doReduce()
+		doReduce(reducef, &reply)
 	}
 	// uncomment to send the Example RPC to the master.
 	//	CallExample()
 
 }
 
-func doMap(mapf func(string, string) []KeyValue, fileName string, reply JobReply, NReduce int) {
+func doMap(mapf func(string, string) []KeyValue, reply *Reply) {
+	task := reply.CurTask
+	fileName := task.File
 	file, err := os.Open(fileName)
 	if err != nil {
 		log.Fatalf("cannot open %v", fileName)
@@ -71,22 +76,62 @@ func doMap(mapf func(string, string) []KeyValue, fileName string, reply JobReply
 	file.Close()
 	kva := mapf(fileName, string(content))
 
-	X := strconv.Itoa(reply.task.TaskNum)
+	X := strconv.Itoa(task.TaskNum)
 	for _, kv := range kva {
 		tem := kv
 		key := kv.Key
-		Y := strconv.Itoa(ihash(key) % NReduce)
-		interFile := "mr" + X + "-" Y
+		Y := strconv.Itoa(ihash(key) % reply.NReduce)
+		interFile := "mr" + X + "-" + Y
 		ofile, _ := os.Create(interFile)
+		defer ofile.Close()
 		enc := json.NewEncoder(ofile)
 		err := enc.Encode(&tem)
-		ofile.Close()
+		if err != nil {
+			log.Fatalf("encode error")
+		}
+		args := Args{task.TaskNum, interFile, "ToBeReduced"}
+		reply := Reply{}
+		call("Master.State", &args, &reply)
 	}
-
-
 }
 
-func doReduce() {
+func doReduce(reducef func(string, []string) string, reply *Reply) {
+	task := reply.CurTask
+	file := task.File
+	kva := []KeyValue{}
+
+	dec := json.NewDecoder(file)
+	for {
+		var kv KeyValue
+		if err := dec.Decode(&kv); err != nil {
+			break
+		}
+		kva = append(kva, kv)
+	}
+
+	sort.Sort(ByKey(kva))
+	oname := "mr-out-" + task.TaskNum
+	ofile, _ := os.Create(oname)
+	i := 0
+	for i < len(kva) {
+		j := i + 1
+		for j < len(kva) && kva[j].Key == kva[i].Key {
+			j++
+		}
+		values := []string{}
+		for k := i; k < j; k++ {
+			values = append(values, kva[k].Value)
+		}
+
+		output := reducef(kva[i].Key, values)
+		fmt.Fprintf(ofile, "%v %v\n", kva[i].Key, output)
+		i = j
+	}
+	ofile.Close()
+
+	args := Args{task.TaskNum, oname, "Finish"}
+	reply := Reply{}
+	call("Master.State", &args, &reply)
 }
 
 //
