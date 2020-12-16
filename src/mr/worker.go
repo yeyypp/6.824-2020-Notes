@@ -1,10 +1,36 @@
 package mr
 
-import "fmt"
-import "log"
-import "net/rpc"
-import "hash/fnv"
-import "os"
+import (
+	"encoding/json"
+	"fmt"
+	"hash/fnv"
+	"io/ioutil"
+	"log"
+	"net/rpc"
+	"os"
+	"path/filepath"
+	"sort"
+	"strconv"
+	"strings"
+	"time"
+)
+
+var sb strings.Builder
+
+// for sorting by key
+type ByKey []KeyValue
+
+func (a ByKey) Len() int {
+	return len(a)
+}
+
+func (a ByKey) Swap(i, j int) {
+	a[i], a[j] = a[j], a[i]
+}
+
+func (a ByKey) Less(i, j int) bool {
+	return a[i].Key < a[j].Key
+}
 
 //
 // Map functions return a slice of KeyValue.
@@ -14,17 +40,7 @@ type KeyValue struct {
 	Value string
 }
 
-type Args struct {
-	TaskNum int
-	File    string
-	State   string
-}
-
-type Reply struct {
-	Phase   string
-	CurTask Task
-	NReduec int
-}
+// RPC parameters
 
 //
 // use ihash(key) % NReduce to choose the reduce
@@ -43,27 +59,53 @@ func Worker(mapf func(string, string) []KeyValue,
 	reducef func(string, []string) string) {
 
 	// Your worker implementation here.
-	args := Args{State: "AskForJob"}
+	fmt.Println("worker is working")
+	args := Args{}
 	reply := Reply{}
 
-	hasJob := call("Master.Job", &args, &reply)
-	if !hasJob {
-		return
+	for {
+		ok := call("Master.Job", &args, &reply)
+		if !ok {
+			fmt.Println("require job error")
+			return
+		}
+		fmt.Println("asking for job")
+		switch reply.State {
+		case "Map":
+			fmt.Println("Doing map job")
+			doMap(mapf, &reply)
+			break
+		case "Reduce":
+			fmt.Println("Doing reduce job")
+			doReduce(reducef, &reply)
+			break
+		case "Mapping":
+			fmt.Println("It is not ready")
+			time.Sleep(time.Duration(time.Second * 10))
+			break
+		case "Reducing":
+			fmt.Println("It is not ready")
+			time.Sleep(time.Duration(time.Second * 10))
+			break
+		case "Finish":
+			fmt.Println("Tasks completed")
+			return
+
+		}
 	}
 
-	switch reply.Phase {
-	case "Map":
-		doMap(mapf, &reply)
-	case "Reduce":
-		doReduce(reducef, &reply)
-	}
 	// uncomment to send the Example RPC to the master.
 	//	CallExample()
 
 }
 
+func GetFileName(TaskNum, HashNum int) string {
+	return fmt.Sprintf("mr-%d-%d", TaskNum, HashNum)
+}
+
 func doMap(mapf func(string, string) []KeyValue, reply *Reply) {
 	task := reply.CurTask
+
 	fileName := task.File
 	file, err := os.Open(fileName)
 	if err != nil {
@@ -76,29 +118,45 @@ func doMap(mapf func(string, string) []KeyValue, reply *Reply) {
 	file.Close()
 	kva := mapf(fileName, string(content))
 
-	X := strconv.Itoa(task.TaskNum)
-	for _, kv := range kva {
-		tem := kv
-		key := kv.Key
-		Y := strconv.Itoa(ihash(key) % reply.NReduce)
-		interFile := "mr" + X + "-" + Y
-		ofile, _ := os.Create(interFile)
-		defer ofile.Close()
-		enc := json.NewEncoder(ofile)
-		err := enc.Encode(&tem)
-		if err != nil {
-			log.Fatalf("encode error")
-		}
-		args := Args{task.TaskNum, interFile, "ToBeReduced"}
-		reply := Reply{}
-		call("Master.State", &args, &reply)
+	TempFiles := make([]*os.File, reply.NReduce)
+	for i := 0; i < len(TempFiles); i++ {
+		TempFiles[i], _ = ioutil.TempFile("", "mr-tmp-*")
 	}
+
+	for _, kv := range kva {
+		index := ihash(kv.Key) % reply.NReduce
+		f := TempFiles[index]
+		enc := json.NewEncoder(f)
+		if e := enc.Encode(&kv); e != nil {
+			fmt.Println("File %v Key %v Value %v Error %v", f.Name(), kv.Key, kv.Value, e)
+			panic("Json encode failed")
+		}
+	}
+
+	TaskList := make([]Task, reply.NReduce)
+
+	for i, f := range TempFiles {
+		newName := GetFileName(task.TaskNum, i)
+		oldName := filepath.Join(f.Name())
+		os.Rename(oldName, newName)
+		f.Close()
+
+		TaskList[i] = Task{"reduce", task.TaskNum, newName}
+	}
+
+	args := Args{"Map Done", task.TaskNum, TaskList}
+	re := Reply{}
+	call("Master.State", &args, &re)
 }
 
 func doReduce(reducef func(string, []string) string, reply *Reply) {
 	task := reply.CurTask
-	file := task.File
+	fileName := task.File
 	kva := []KeyValue{}
+	file, err := os.Open(fileName)
+	if err != nil {
+		return
+	}
 
 	dec := json.NewDecoder(file)
 	for {
@@ -110,7 +168,7 @@ func doReduce(reducef func(string, []string) string, reply *Reply) {
 	}
 
 	sort.Sort(ByKey(kva))
-	oname := "mr-out-" + task.TaskNum
+	oname := "mr-out-" + strconv.Itoa(task.TaskNum)
 	ofile, _ := os.Create(oname)
 	i := 0
 	for i < len(kva) {
@@ -129,9 +187,11 @@ func doReduce(reducef func(string, []string) string, reply *Reply) {
 	}
 	ofile.Close()
 
-	args := Args{task.TaskNum, oname, "Finish"}
-	reply := Reply{}
-	call("Master.State", &args, &reply)
+	// To Do: finish Reduce job report to Master
+
+	args := Args{"Reduce Done", 0, nil}
+	re := Reply{}
+	call("Master.State", &args, &re)
 }
 
 //

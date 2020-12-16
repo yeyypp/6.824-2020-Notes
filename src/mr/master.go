@@ -8,41 +8,131 @@ import "net/http"
 import "sync"
 
 type Task struct {
+	State   string
 	TaskNum int
 	File    string
+}
+
+type Reply struct {
 	State   string
+	CurTask Task
+	NReduce int
+}
+
+type Args struct {
+	State    string
+	TaskNum  int
+	TaskList []Task
 }
 
 type Master struct {
 	// Your definitions here.
-	mu       sync.Mutex
-	TaskList []Task
-	NReduce  int
+	mu      sync.Mutex
+	NReduce int
+	Phase   string
+	AllJob  int
+
+	MapTask   []Task
+	MapCount  int
+	MapFinish int
+
+	ReduceTask   []Task
+	ReduceCount  int
+	ReduceFinish int
 }
 
 // Your code here -- RPC handlers for the worker to call.
 func (m *Master) Job(args *Args, reply *Reply) error {
+	switch m.Phase {
+	case "Start":
+		DistributeMapJob(m, reply)
+	case "Mapping":
+		Process(m, reply)
+	case "Reduce":
+		DistributeReduceJob(m, reply)
+	case "Reducing":
+		Process(m, reply)
+	case "Finish":
+		Finish(m, reply)
+	}
+	return nil
+}
+
+func DistributeMapJob(m *Master, reply *Reply) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	for _, task := range TaskList {
-		if task.State == "Idle" {
-			reply.task = task
+
+	for i, t := range m.MapTask {
+		if t.State == "idle" {
+			m.MapTask[i].State = "map"
+			reply.State = "Map"
+			reply.CurTask = m.MapTask[i]
 			reply.NReduce = m.NReduce
-			return nil
+			m.MapCount += 1
+			if m.MapCount == len(m.MapTask) {
+				m.Phase = "Mapping"
+			}
+			break
 		}
 	}
+
+}
+
+func Process(m *Master, reply *Reply) {
+	switch m.Phase {
+	case "Mapping":
+		reply.State = "Mapping"
+	case "Reducing":
+		reply.State = "Reducing"
+	}
+}
+
+func DistributeReduceJob(m *Master, reply *Reply) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+
+	for i, t := range m.ReduceTask {
+		if t.State == "reduce" {
+			m.ReduceTask[i].State = "reducing"
+			reply.State = "Reduce"
+			reply.CurTask = m.ReduceTask[i]
+			reply.NReduce = m.NReduce
+			m.ReduceCount += 1
+			if m.ReduceCount == len(m.ReduceTask) {
+				m.Phase = "Reducing"
+			}
+			break
+		}
+	}
+
+}
+
+func Finish(m *Master, reply *Reply) {
+	reply.State = "Finish"
 }
 
 func (m *Master) State(args *Args, reply *Reply) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	for _, task := range TaskList {
-		if task.TaskNum == args.TaskNum {
-			task.State = args.State
-			task.File = args.File
-			return nil
+
+	switch args.State {
+	case "Map Done":
+		for i, _ := range args.TaskList {
+			m.ReduceTask = append(m.ReduceTask, args.TaskList[i])
+		}
+		//m.ReduceTask = append(m.ReduceTask, args.TaskList...)
+		m.MapFinish += 1
+		if m.MapFinish == len(m.MapTask) {
+			m.Phase = "Reduce"
+		}
+	case "Reduce Done":
+		m.ReduceFinish += 1
+		if m.ReduceFinish == m.AllJob {
+			m.Phase = "Finish"
 		}
 	}
+	return nil
+
 }
 
 //
@@ -79,13 +169,8 @@ func (m *Master) Done() bool {
 	ret := true
 
 	// Your code here.
-	m.mu.Lock()
-	defer m.mu.Unlock()
-	for _, task := range m.TaskList {
-		if task.State != "Finish" {
-			ret = false
-			break
-		}
+	if m.Phase != "Finish" {
+		ret = false
 	}
 	return ret
 }
@@ -97,17 +182,22 @@ func (m *Master) Done() bool {
 //
 func MakeMaster(files []string, nReduce int) *Master {
 
-	m := Master{}
-	TaskList := []Task{}
-	for i, file := range files {
-		task := Task{i, file, "Idle"}
-		TaskList[i] = task
-	}
-
-	m.TaskList = TaskList
-	m.NReduce = nReduce
-
 	// Your code here.
+	m := Master{}
+	m.Phase = "Start"
+	m.NReduce = nReduce
+	m.MapTask = make([]Task, len(files))
+	for i, f := range files {
+		m.MapTask[i] = Task{"idle", i, f}
+	}
+	m.MapCount = 0
+	m.MapFinish = 0
+
+	m.ReduceTask = make([]Task, 0)
+	m.ReduceCount = 0
+	m.ReduceFinish = 0
+
+	m.AllJob = len(files) * nReduce
 
 	m.server()
 	return &m
