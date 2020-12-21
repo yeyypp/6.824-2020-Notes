@@ -74,19 +74,19 @@ func Worker(mapf func(string, string) []KeyValue,
 		case "Map":
 			fmt.Println("Doing map job")
 			doMap(mapf, &reply)
-			break
+			//break
 		case "Reduce":
 			fmt.Println("Doing reduce job")
 			doReduce(reducef, &reply)
-			break
+			//break
 		case "Mapping":
 			fmt.Println("It is not ready")
 			time.Sleep(time.Duration(time.Second * 10))
-			break
+			//break
 		case "Reducing":
 			fmt.Println("It is not ready")
 			time.Sleep(time.Duration(time.Second * 10))
-			break
+			//break
 		case "Finish":
 			fmt.Println("Tasks completed")
 			return
@@ -141,7 +141,7 @@ func doMap(mapf func(string, string) []KeyValue, reply *Reply) {
 		os.Rename(oldName, newName)
 		f.Close()
 
-		TaskList[i] = Task{"reduce", task.TaskNum, newName}
+		TaskList[i] = Task{"reduce", i, newName}
 	}
 
 	args := Args{"Map Done", task.TaskNum, TaskList}
@@ -155,6 +155,7 @@ func doReduce(reducef func(string, []string) string, reply *Reply) {
 	kva := []KeyValue{}
 	file, err := os.Open(fileName)
 	if err != nil {
+		fmt.Println("can't open the %v", fileName)
 		return
 	}
 
@@ -166,10 +167,14 @@ func doReduce(reducef func(string, []string) string, reply *Reply) {
 		}
 		kva = append(kva, kv)
 	}
+	file.Close()
 
 	sort.Sort(ByKey(kva))
+	ofile, e := ioutil.TempFile("", "mr-*")
+	if e != nil {
+		fmt.Println("create tem file error")
+	}
 	oname := "mr-out-" + strconv.Itoa(task.TaskNum)
-	ofile, _ := os.Create(oname)
 	i := 0
 	for i < len(kva) {
 		j := i + 1
@@ -185,9 +190,9 @@ func doReduce(reducef func(string, []string) string, reply *Reply) {
 		fmt.Fprintf(ofile, "%v %v\n", kva[i].Key, output)
 		i = j
 	}
-	ofile.Close()
 
-	// To Do: finish Reduce job report to Master
+	os.Rename(filepath.Join(ofile.Name()), oname)
+	ofile.Close()
 
 	args := Args{"Reduce Done", 0, nil}
 	re := Reply{}
