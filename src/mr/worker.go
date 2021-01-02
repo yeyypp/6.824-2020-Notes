@@ -70,23 +70,16 @@ func Worker(mapf func(string, string) []KeyValue,
 			return
 		}
 		fmt.Println("asking for job")
-		switch reply.State {
+		switch reply.CurTask.State {
 		case "Map":
 			fmt.Println("Doing map job")
 			doMap(mapf, &reply)
-			//break
 		case "Reduce":
 			fmt.Println("Doing reduce job")
 			doReduce(reducef, &reply)
-			//break
-		case "Mapping":
+		case "Working":
 			fmt.Println("It is not ready")
 			time.Sleep(time.Duration(time.Second * 10))
-			//break
-		case "Reducing":
-			fmt.Println("It is not ready")
-			time.Sleep(time.Duration(time.Second * 10))
-			//break
 		case "Finish":
 			fmt.Println("Tasks completed")
 			return
@@ -141,7 +134,7 @@ func doMap(mapf func(string, string) []KeyValue, reply *Reply) {
 		os.Rename(oldName, newName)
 		f.Close()
 
-		TaskList[i] = Task{"reduce", i, newName}
+		TaskList[i] = Task{"Reduce", i, newName}
 	}
 
 	args := Args{"Map Done", task.TaskNum, TaskList}

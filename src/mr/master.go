@@ -1,11 +1,14 @@
 package mr
 
-import "log"
-import "net"
-import "os"
-import "net/rpc"
-import "net/http"
-import "sync"
+import (
+	"fmt"
+	"log"
+	"net"
+	"net/http"
+	"net/rpc"
+	"os"
+	"sync"
+)
 
 type Node struct {
 	t    Task
@@ -90,7 +93,6 @@ type Task struct {
 }
 
 type Reply struct {
-	State   string
 	CurTask Task
 	NReduce int
 }
@@ -103,108 +105,57 @@ type Args struct {
 
 type Master struct {
 	// Your definitions here.
-	mu      sync.Mutex
-	NReduce int
+	nReduce int
 	Phase   string
 
-	MapTask   []Task
-	MapCount  int
-	MapFinish int
-
-	ReduceTask   []Task
-	ReduceCount  int
-	ReduceFinish int
+	MapQ     *Queue
+	ReduceQ  *Queue
+	RunningQ *Queue
 }
 
 // Your code here -- RPC handlers for the worker to call.
 func (m *Master) Job(args *Args, reply *Reply) error {
-	switch m.Phase {
-	case "Start":
-		DistributeMapJob(m, reply)
-	case "Mapping":
-		Process(m, reply)
-	case "Reduce":
-		DistributeReduceJob(m, reply)
-	case "Reducing":
-		Process(m, reply)
-	case "Finish":
-		Finish(m, reply)
+	// why nReduce always zero in worker
+	reply.NReduce = m.nReduce
+	if !m.MapQ.IsEmpty() {
+		SendMap(m, reply)
+	} else if m.MapQ.IsEmpty() && m.ReduceQ.IsEmpty() && !m.RunningQ.IsEmpty() {
+		t := Task{"Working", 0, "nil"}
+		reply.CurTask = t
+	} else if m.MapQ.IsEmpty() && !m.ReduceQ.IsEmpty() {
+		SendReduce(m, reply)
+	} else {
+		t := Task{"Finish", 0, "nil"}
+		reply.CurTask = t
+		m.Phase = "Finish"
 	}
 	return nil
 }
 
-func DistributeMapJob(m *Master, reply *Reply) {
-	m.mu.Lock()
-	defer m.mu.Unlock()
-
-	for i, t := range m.MapTask {
-		if t.State == "idle" {
-			m.MapTask[i].State = "map"
-			reply.State = "Map"
-			reply.CurTask = m.MapTask[i]
-			reply.NReduce = m.NReduce
-			m.MapCount += 1
-			if m.MapCount == len(m.MapTask) {
-				m.Phase = "Mapping"
-			}
-			break
-		}
-	}
+func SendMap(m *Master, reply *Reply) {
+	t := m.MapQ.Poll()
+	reply.CurTask = t
+	fmt.Println("Master.replyl.nReduce ", reply.NReduce)
+	m.RunningQ.Offer(t)
 
 }
 
-func Process(m *Master, reply *Reply) {
-	switch m.Phase {
-	case "Mapping":
-		reply.State = "Mapping"
-	case "Reducing":
-		reply.State = "Reducing"
-	}
-}
-
-func DistributeReduceJob(m *Master, reply *Reply) {
-	m.mu.Lock()
-	defer m.mu.Unlock()
-
-	for i, t := range m.ReduceTask {
-		if t.State == "reduce" {
-			m.ReduceTask[i].State = "reducing"
-			reply.State = "Reduce"
-			reply.CurTask = m.ReduceTask[i]
-			reply.NReduce = m.NReduce
-			m.ReduceCount += 1
-			if m.ReduceCount == len(m.ReduceTask) {
-				m.Phase = "Reducing"
-			}
-			break
-		}
-	}
-
-}
-
-func Finish(m *Master, reply *Reply) {
-	reply.State = "Finish"
+func SendReduce(m *Master, reply *Reply) {
+	t := m.ReduceQ.Poll()
+	reply.CurTask = t
+	m.RunningQ.Offer(t)
 }
 
 func (m *Master) State(args *Args, reply *Reply) error {
-	m.mu.Lock()
-	defer m.mu.Unlock()
 
 	switch args.State {
 	case "Map Done":
+		m.RunningQ.Poll()
 		for i, _ := range args.TaskList {
-			m.ReduceTask = append(m.ReduceTask, args.TaskList[i])
-		}
-		//m.ReduceTask = append(m.ReduceTask, args.TaskList...)
-		m.MapFinish += 1
-		if m.MapFinish == len(m.MapTask) {
-			m.Phase = "Reduce"
+			m.ReduceQ.Offer(args.TaskList[i])
 		}
 	case "Reduce Done":
-		m.ReduceFinish += 1
-		if m.ReduceFinish == m.AllJob {
-			m.Phase = "Finish"
-		}
+		m.RunningQ.Poll()
 	}
 	return nil
 
@@ -258,21 +209,16 @@ func (m *Master) Done() bool {
 func MakeMaster(files []string, nReduce int) *Master {
 
 	// Your code here.
-	m := Master{}
+	m := Master{nReduce: nReduce}
 	m.Phase = "Start"
-	m.NReduce = nReduce
-	m.MapTask = make([]Task, len(files))
-	for i, f := range files {
-		m.MapTask[i] = Task{"idle", i, f}
+	m.MapQ = NewQueue()
+	m.ReduceQ = NewQueue()
+	m.RunningQ = NewQueue()
+
+	for i, _ := range files {
+		t := Task{"Map", i, files[i]}
+		m.MapQ.Offer(t)
 	}
-	m.MapCount = 0
-	m.MapFinish = 0
-
-	m.ReduceTask = make([]Task, 0)
-	m.ReduceCount = 0
-	m.ReduceFinish = 0
-
-	m.AllJob = len(files) * nReduce
 
 	m.server()
 	return &m
