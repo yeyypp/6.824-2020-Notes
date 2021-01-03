@@ -1,7 +1,6 @@
 package mr
 
 import (
-	"fmt"
 	"log"
 	"net"
 	"net/http"
@@ -95,17 +94,18 @@ type Task struct {
 type Reply struct {
 	CurTask Task
 	NReduce int
+	NFiles  int
 }
 
 type Args struct {
-	State    string
-	TaskNum  int
-	TaskList []Task
+	State   string
+	TaskNum int
 }
 
 type Master struct {
 	// Your definitions here.
-	nReduce int
+	NReduce int
+	NFiles  int
 	Phase   string
 
 	MapQ     *Queue
@@ -116,18 +116,24 @@ type Master struct {
 // Your code here -- RPC handlers for the worker to call.
 func (m *Master) Job(args *Args, reply *Reply) error {
 	// why nReduce always zero in worker
-	reply.NReduce = m.nReduce
+	reply.NReduce = m.NReduce
+	reply.NFiles = m.NFiles
+
 	if !m.MapQ.IsEmpty() {
 		SendMap(m, reply)
-	} else if m.MapQ.IsEmpty() && m.ReduceQ.IsEmpty() && !m.RunningQ.IsEmpty() {
+	} else if m.MapQ.IsEmpty() && !m.RunningQ.IsEmpty() {
 		t := Task{"Working", 0, "nil"}
 		reply.CurTask = t
 	} else if m.MapQ.IsEmpty() && !m.ReduceQ.IsEmpty() {
 		SendReduce(m, reply)
-	} else {
+	} else if m.ReduceQ.IsEmpty() && !m.RunningQ.IsEmpty() {
+		t := Task{"Working", 0, "nil"}
+		reply.CurTask = t
+	} else if m.MapQ.IsEmpty() && m.ReduceQ.IsEmpty() && m.RunningQ.IsEmpty() {
 		t := Task{"Finish", 0, "nil"}
 		reply.CurTask = t
 		m.Phase = "Finish"
+
 	}
 	return nil
 }
@@ -135,7 +141,6 @@ func (m *Master) Job(args *Args, reply *Reply) error {
 func SendMap(m *Master, reply *Reply) {
 	t := m.MapQ.Poll()
 	reply.CurTask = t
-	fmt.Println("Master.replyl.nReduce ", reply.NReduce)
 	m.RunningQ.Offer(t)
 
 }
@@ -151,9 +156,6 @@ func (m *Master) State(args *Args, reply *Reply) error {
 	switch args.State {
 	case "Map Done":
 		m.RunningQ.Poll()
-		for i, _ := range args.TaskList {
-			m.ReduceQ.Offer(args.TaskList[i])
-		}
 	case "Reduce Done":
 		m.RunningQ.Poll()
 	}
@@ -209,7 +211,7 @@ func (m *Master) Done() bool {
 func MakeMaster(files []string, nReduce int) *Master {
 
 	// Your code here.
-	m := Master{nReduce: nReduce}
+	m := Master{NReduce: nReduce, NFiles: len(files)}
 	m.Phase = "Start"
 	m.MapQ = NewQueue()
 	m.ReduceQ = NewQueue()
@@ -218,6 +220,11 @@ func MakeMaster(files []string, nReduce int) *Master {
 	for i, _ := range files {
 		t := Task{"Map", i, files[i]}
 		m.MapQ.Offer(t)
+	}
+
+	for i := 0; i < nReduce; i++ {
+		t := Task{"Reduce", i, ""}
+		m.ReduceQ.Offer(t)
 	}
 
 	m.server()
