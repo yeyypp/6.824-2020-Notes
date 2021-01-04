@@ -9,82 +9,6 @@ import (
 	"sync"
 )
 
-type Node struct {
-	t    Task
-	pre  *Node
-	next *Node
-}
-
-type Queue struct {
-	sync.RWMutex
-	head *Node
-	tail *Node
-	size int
-}
-
-func NewQueue() *Queue {
-	h := new(Node)
-	t := new(Node)
-	h.next = t
-	t.pre = h
-	return &Queue{
-		head: h,
-		tail: t,
-		size: 0,
-	}
-}
-
-func (q *Queue) Offer(t Task) {
-	q.Lock()
-	defer q.Unlock()
-
-	n := new(Node)
-	n.t = t
-
-	pre := q.tail.pre
-	pre.next = n
-	n.pre = pre
-
-	n.next = q.tail
-	q.tail.pre = n
-	q.size += 1
-}
-
-func (q *Queue) Poll() Task {
-	q.Lock()
-	defer q.Unlock()
-
-	if q.size == 0 {
-		return Task{}
-	}
-
-	n := q.head.next
-	q.head.next = n.next
-	n.next.pre = q.head
-
-	n.next = nil
-	n.pre = nil
-	t := n.t
-
-	q.size -= 1
-
-	return t
-}
-
-func (q *Queue) Size() int {
-	q.RLock()
-	defer q.RUnlock()
-
-	return q.size
-}
-
-func (q *Queue) IsEmpty() bool {
-	q.RLock()
-	defer q.RUnlock()
-
-	return q.size == 0
-}
-
 type Task struct {
 	State   string
 	TaskNum int
@@ -92,7 +16,7 @@ type Task struct {
 }
 
 type Reply struct {
-	CurTask Task
+	Task    Task
 	NReduce int
 	NFiles  int
 }
@@ -104,13 +28,18 @@ type Args struct {
 
 type Master struct {
 	// Your definitions here.
+
+	mu      sync.Mutex
 	NReduce int
 	NFiles  int
-	Phase   string
 
-	MapQ     *Queue
-	ReduceQ  *Queue
-	RunningQ *Queue
+	MapTask    []Task
+	ReduceTask []Task
+
+	MapCount    int
+	ReduceCount int
+
+	IsFinished bool
 }
 
 // Your code here -- RPC handlers for the worker to call.
@@ -119,23 +48,6 @@ func (m *Master) Job(args *Args, reply *Reply) error {
 	reply.NReduce = m.NReduce
 	reply.NFiles = m.NFiles
 
-	if !m.MapQ.IsEmpty() {
-		SendMap(m, reply)
-	} else if m.MapQ.IsEmpty() && !m.RunningQ.IsEmpty() {
-		t := Task{"Working", 0, "nil"}
-		reply.CurTask = t
-	} else if m.MapQ.IsEmpty() && !m.ReduceQ.IsEmpty() {
-		SendReduce(m, reply)
-	} else if m.ReduceQ.IsEmpty() && !m.RunningQ.IsEmpty() {
-		t := Task{"Working", 0, "nil"}
-		reply.CurTask = t
-	} else if m.MapQ.IsEmpty() && m.ReduceQ.IsEmpty() && m.RunningQ.IsEmpty() {
-		t := Task{"Finish", 0, "nil"}
-		reply.CurTask = t
-		m.Phase = "Finish"
-
-	}
-	return nil
 }
 
 func SendMap(m *Master, reply *Reply) {
