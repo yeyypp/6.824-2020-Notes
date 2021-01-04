@@ -7,6 +7,7 @@ import (
 	"net/rpc"
 	"os"
 	"sync"
+	"time"
 )
 
 type Task struct {
@@ -43,34 +44,48 @@ type Master struct {
 }
 
 // Your code here -- RPC handlers for the worker to call.
-func (m *Master) Job(args *Args, reply *Reply) error {
+func (m *Master) AskJob(args *Args, reply *Reply) error {
 	// why nReduce always zero in worker
 	reply.NReduce = m.NReduce
 	reply.NFiles = m.NFiles
 
+	if !CheckIfMapFinish(m) {
+		SendMap(m, reply)
+	} else if !CheckIfReduceFinish(m) {
+		SendReduce(m, reply)
+	} else {
+		t := Task{"Finish", 0, "nil"}
+		reply.Task = t
+		return nil
+	}
+}
+
+func CheckIfMapFinish(m *Master) bool {
+	if m.MapCount >= len(m.MapTask) {
+		return true
+	}
+	return false
+}
+
+func CheckIfReduceFinish(m *Master) bool {
+	if m.ReduceCount >= len(m.ReduceTask) {
+		return true
+	}
+	return false
+}
+
+func CheckIfTaskTimeOut(t Task) {
 }
 
 func SendMap(m *Master, reply *Reply) {
-	t := m.MapQ.Poll()
-	reply.CurTask = t
-	m.RunningQ.Offer(t)
-
 }
 
 func SendReduce(m *Master, reply *Reply) {
-	t := m.ReduceQ.Poll()
-	reply.CurTask = t
-	m.RunningQ.Offer(t)
+
 }
 
-func (m *Master) State(args *Args, reply *Reply) error {
+func (m *Master) ReportJob(args *Args, reply *Reply) error {
 
-	switch args.State {
-	case "Map Done":
-		m.RunningQ.Poll()
-	case "Reduce Done":
-		m.RunningQ.Poll()
-	}
 	return nil
 
 }
@@ -106,12 +121,8 @@ func (m *Master) server() {
 // if the entire job has finished.
 //
 func (m *Master) Done() bool {
-	ret := true
-
+	ret := false
 	// Your code here.
-	if m.Phase != "Finish" {
-		ret = false
-	}
 	return ret
 }
 
@@ -123,21 +134,6 @@ func (m *Master) Done() bool {
 func MakeMaster(files []string, nReduce int) *Master {
 
 	// Your code here.
-	m := Master{NReduce: nReduce, NFiles: len(files)}
-	m.Phase = "Start"
-	m.MapQ = NewQueue()
-	m.ReduceQ = NewQueue()
-	m.RunningQ = NewQueue()
-
-	for i, _ := range files {
-		t := Task{"Map", i, files[i]}
-		m.MapQ.Offer(t)
-	}
-
-	for i := 0; i < nReduce; i++ {
-		t := Task{"Reduce", i, ""}
-		m.ReduceQ.Offer(t)
-	}
 
 	m.server()
 	return &m
