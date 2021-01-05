@@ -64,22 +64,22 @@ func Worker(mapf func(string, string) []KeyValue,
 	reply := Reply{}
 
 	for {
-		ok := call("Master.Job", &args, &reply)
+		ok := call("Master.AskJob", &args, &reply)
 		if !ok {
 			fmt.Println("It's over")
-			return
+			os.Exit(1)
 		}
 		fmt.Println("asking for job")
-		switch reply.CurTask.State {
+		switch reply.Task.State {
 		case "Map":
-			fmt.Println("Doing map job")
+			fmt.Println("Doing map job %v", reply.Task.TaskNum)
 			doMap(mapf, &reply)
 		case "Reduce":
-			fmt.Println("Doing reduce job")
+			fmt.Println("Doing reduce job %v", reply.Task.TaskNum)
 			doReduce(reducef, &reply)
-		case "Working":
-			fmt.Println("Still working")
-			time.Sleep(time.Duration(time.Second * 10))
+		case "No job":
+			fmt.Println("wait 10 seconds")
+			time.Sleep(10 * time.Second)
 		case "Finish":
 			fmt.Println("Tasks completed")
 			return
@@ -97,9 +97,10 @@ func GetFileName(TaskNum, HashNum int) string {
 }
 
 func doMap(mapf func(string, string) []KeyValue, reply *Reply) {
-	task := reply.CurTask
+	task := reply.Task
 
 	fileName := task.File
+
 	file, err := os.Open(fileName)
 	if err != nil {
 		log.Fatalf("cannot open %v", fileName)
@@ -109,7 +110,9 @@ func doMap(mapf func(string, string) []KeyValue, reply *Reply) {
 		log.Fatalf("cannot read %v", fileName)
 	}
 	file.Close()
+
 	kva := mapf(fileName, string(content))
+	sort.Sort(ByKey(kva))
 
 	TempFiles := make([]*os.File, reply.NReduce)
 	for i := 0; i < len(TempFiles); i++ {
@@ -133,17 +136,17 @@ func doMap(mapf func(string, string) []KeyValue, reply *Reply) {
 		f.Close()
 	}
 
-	args := Args{"Map Done", task.TaskNum}
+	args := Args{"Map", task.TaskNum}
 	re := Reply{}
-	call("Master.State", &args, &re)
+	call("Master.ReportJob", &args, &re)
 }
 
 func doReduce(reducef func(string, []string) string, reply *Reply) {
-	index := reply.CurTask.TaskNum
+	index := reply.Task.TaskNum
 	NFiles := reply.NFiles
+	kva := []KeyValue{}
 	for count := 0; count < NFiles; count++ {
 		fileName := "mr-" + strconv.Itoa(count) + "-" + strconv.Itoa(index)
-		kva := []KeyValue{}
 		file, err := os.Open(fileName)
 		if err != nil {
 			fmt.Println("can't open the %v", fileName)
@@ -160,36 +163,37 @@ func doReduce(reducef func(string, []string) string, reply *Reply) {
 			kva = append(kva, kv)
 		}
 		file.Close()
-
-		sort.Sort(ByKey(kva))
-		ofile, e := ioutil.TempFile("", "mr-*")
-		if e != nil {
-			fmt.Println("create tem file error")
-		}
-		oname := "mr-out-" + strconv.Itoa(index)
-		i := 0
-		for i < len(kva) {
-			j := i + 1
-			for j < len(kva) && kva[j].Key == kva[i].Key {
-				j++
-			}
-			values := []string{}
-			for k := i; k < j; k++ {
-				values = append(values, kva[k].Value)
-			}
-
-			output := reducef(kva[i].Key, values)
-			fmt.Fprintf(ofile, "%v %v\n", kva[i].Key, output)
-			i = j
-		}
-
-		os.Rename(filepath.Join(ofile.Name()), oname)
-		ofile.Close()
 	}
 
-	args := Args{"Reduce Done", 0}
+	sort.Sort(ByKey(kva))
+
+	ofile, err := ioutil.TempFile("", "mr-*")
+	if err != nil {
+		panic("create tempfile error")
+	}
+
+	i := 0
+	for i < len(kva) {
+		j := i + 1
+		for j < len(kva) && kva[j].Key == kva[i].Key {
+			j++
+		}
+		values := []string{}
+		for k := i; k < j; k++ {
+			values = append(values, kva[k].Value)
+		}
+		output := reducef(kva[i].Key, values)
+		fmt.Fprintf(ofile, "%v %v\n", kva[i].Key, output)
+		i = j
+	}
+
+	oname := "mr-out-" + strconv.Itoa(index)
+	os.Rename(filepath.Join(ofile.Name()), oname)
+	ofile.Close()
+
+	args := Args{"Reduce", index}
 	re := Reply{}
-	call("Master.State", &args, &re)
+	call("Master.ReportJob", &args, &re)
 }
 
 //
