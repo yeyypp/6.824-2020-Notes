@@ -20,7 +20,9 @@ type Task struct {
 }
 
 type Reply struct {
-	Task    Task
+	State   string
+	TaskNum int
+	File    string
 	NReduce int
 	NFiles  int
 }
@@ -48,81 +50,99 @@ type Master struct {
 
 // Your code here -- RPC handlers for the worker to call.
 func (m *Master) AskJob(args *Args, reply *Reply) error {
-	// why nReduce always zero in worker
-	reply.Task = Task{"No job", 0, "nil", false, false}
-	reply.NReduce = m.NReduce
-	reply.NFiles = m.NFiles
 
-	if !CheckIfMapFinish(m) {
-		SendMap(m, reply)
-		go CheckIfTaskTimeOut(m, reply)
-	} else if !CheckIfReduceFinish(m) {
-		SendReduce(m, reply)
-		go CheckIfTaskTimeOut(m, reply)
+	if !m.CheckIfMapFinish() {
+		m.SendMap(reply)
+		go m.CheckIfTaskTimeOut(reply)
+	} else if !m.CheckIfReduceFinish() {
+		m.SendReduce(reply)
+		go m.CheckIfTaskTimeOut(reply)
 	} else {
 		m.IsFinished = true
-		t := Task{"Finish", 0, "nil", true, true}
-		reply.Task = t
+		reply.State = "Finish"
 	}
 	return nil
 }
 
-func CheckIfMapFinish(m *Master) bool {
+func (m *Master) CheckIfMapFinish() bool {
+	m.mu.Lock()
+	defer m.mu.Unlock()
 	if m.MapCount >= 8 {
 		return true
 	}
 	return false
 }
 
-func CheckIfReduceFinish(m *Master) bool {
+func (m *Master) CheckIfReduceFinish() bool {
+	m.mu.Lock()
+	defer m.mu.Unlock()
 	if m.ReduceCount >= 10 {
 		return true
 	}
 	return false
 }
 
-func CheckIfTaskTimeOut(m *Master, reply *Reply) {
+func (m *Master) CheckIfTaskTimeOut(reply *Reply) {
 
 	<-time.After(10 * time.Second)
 
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	t := reply.Task
-	if t.State == "Map" {
-		if !m.MapTask[t.TaskNum].IsFinished {
-			m.MapTask[t.TaskNum].IsSent = false
-			fmt.Println("the Map %v is time out", t.TaskNum)
-		}
-	} else if t.State == "Reduce" {
-		if !m.ReduceTask[t.TaskNum].IsFinished {
-			m.ReduceTask[t.TaskNum].IsSent = false
-			fmt.Println("the Reduce %v is time out", t.TaskNum)
+	State := reply.State
+	TaskNum := reply.TaskNum
 
+	if State == "Map" {
+		if !m.MapTask[TaskNum].IsFinished {
+			m.MapTask[TaskNum].IsSent = false
+			fmt.Printf("map job %v is timeout\n", TaskNum)
+		}
+	} else if State == "Reduce" {
+		if !m.ReduceTask[TaskNum].IsFinished {
+			m.ReduceTask[TaskNum].IsSent = false
+
+			fmt.Printf("reduce job %v is timeout\n", TaskNum)
 		}
 	}
 }
 
-func SendMap(m *Master, reply *Reply) {
+func (m *Master) SendMap(reply *Reply) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
+
+	reply.State = "No job"
+	reply.TaskNum = 0
+	reply.File = "nil"
+	reply.NReduce = m.NReduce
+	reply.NFiles = m.NFiles
 
 	for i, _ := range m.MapTask {
 		if !m.MapTask[i].IsSent {
 			m.MapTask[i].IsSent = true
-			reply.Task = m.MapTask[i]
+			reply.State = "Map"
+			reply.TaskNum = i
+			reply.File = m.MapTask[i].File
+			fmt.Printf("Send map job %v \n", reply.TaskNum)
 			break
 		}
 	}
 }
 
-func SendReduce(m *Master, reply *Reply) {
+func (m *Master) SendReduce(reply *Reply) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
+	reply.State = "No job"
+	reply.TaskNum = 0
+	reply.File = "nil"
+	reply.NReduce = m.NReduce
+	reply.NFiles = m.NFiles
+
 	for i, _ := range m.ReduceTask {
-		if !m.ReduceTask[i].IsSent && !m.ReduceTask[i].IsFinished {
+		if !m.ReduceTask[i].IsSent {
 			m.ReduceTask[i].IsSent = true
-			reply.Task = m.ReduceTask[i]
+			reply.State = "Reduce"
+			reply.TaskNum = i
+			fmt.Printf("Send reduce job %v \n", reply.TaskNum)
 			break
 		}
 	}
@@ -137,24 +157,17 @@ func (m *Master) ReportJob(args *Args, reply *Reply) error {
 
 	if state == "Map" && !m.MapTask[i].IsFinished {
 		m.MapTask[i].IsFinished = true
-		if m.MapCount == -1 {
-			m.MapCount = 0
-		}
 		m.MapCount++
-		fmt.Println("finish map %v job", i)
-		fmt.Println("current map job is %v", m.MapCount)
+		fmt.Printf("map job %v is finished\n", i)
 	} else if state == "Reduce" && !m.ReduceTask[i].IsFinished {
 		m.ReduceTask[i].IsFinished = true
-		if m.ReduceCount == -1 {
-			m.ReduceCount = 0
-		}
 		m.ReduceCount++
 		if m.ReduceCount >= len(m.ReduceTask) {
 
 			m.IsFinished = true
 		}
-		fmt.Println("finish reduce %v job", i)
-		fmt.Println("current reduce job is %v", m.ReduceCount)
+
+		fmt.Printf("reduce job %v is finished\n", i)
 	}
 	return nil
 }
@@ -215,13 +228,12 @@ func MakeMaster(files []string, nReduce int) *Master {
 
 	m.MapTask = make([]Task, len(files))
 	for i, _ := range files {
-		t := Task{"Map", i, files[i], false, false}
-		m.MapTask[i] = t
+		m.MapTask[i] = Task{"Map", i, files[i], false, false}
 	}
 
-	for i := 0; i < nReduce; i++ {
-		task := Task{"Reduce", i, "nil", false, false}
-		m.ReduceTask = append(m.ReduceTask, task)
+	m.ReduceTask = make([]Task, nReduce)
+	for i, _ := range m.ReduceTask {
+		m.ReduceTask[i] = Task{"Reduce", i, "nil", false, false}
 	}
 	m.server()
 	return &m

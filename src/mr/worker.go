@@ -60,28 +60,27 @@ func Worker(mapf func(string, string) []KeyValue,
 
 	// Your worker implementation here.
 	fmt.Println("worker is working")
-	args := Args{}
-	reply := Reply{}
 
 	for {
+		args := Args{}
+		reply := Reply{}
+
 		ok := call("Master.AskJob", &args, &reply)
 		if !ok {
-			fmt.Println("It's over")
+			fmt.Println("Master is closed")
 			os.Exit(1)
 		}
-		fmt.Println("asking for job")
-		switch reply.Task.State {
+		fmt.Printf("get %v job %v\n", reply.State, reply.TaskNum)
+		switch reply.State {
 		case "Map":
-			fmt.Println("Doing map job %v", reply.Task.TaskNum)
 			doMap(mapf, &reply)
 		case "Reduce":
-			fmt.Println("Doing reduce job %v", reply.Task.TaskNum)
 			doReduce(reducef, &reply)
 		case "No job":
-			fmt.Println("wait 10 seconds")
+			fmt.Println("wait for 10 seconds")
 			time.Sleep(10 * time.Second)
 		case "Finish":
-			fmt.Println("Tasks completed")
+			fmt.Println("Jobs completed")
 			return
 
 		}
@@ -97,9 +96,8 @@ func GetFileName(TaskNum, HashNum int) string {
 }
 
 func doMap(mapf func(string, string) []KeyValue, reply *Reply) {
-	task := reply.Task
 
-	fileName := task.File
+	fileName := reply.File
 
 	file, err := os.Open(fileName)
 	if err != nil {
@@ -130,23 +128,23 @@ func doMap(mapf func(string, string) []KeyValue, reply *Reply) {
 	}
 
 	for i, f := range TempFiles {
-		newName := GetFileName(task.TaskNum, i)
+		newName := GetFileName(reply.TaskNum, i)
 		oldName := filepath.Join(f.Name())
 		os.Rename(oldName, newName)
 		f.Close()
 	}
 
-	args := Args{"Map", task.TaskNum}
+	args := Args{"Map", reply.TaskNum}
 	re := Reply{}
 	call("Master.ReportJob", &args, &re)
 }
 
 func doReduce(reducef func(string, []string) string, reply *Reply) {
-	index := reply.Task.TaskNum
+	Index := reply.TaskNum
 	NFiles := reply.NFiles
 	kva := []KeyValue{}
 	for count := 0; count < NFiles; count++ {
-		fileName := "mr-" + strconv.Itoa(count) + "-" + strconv.Itoa(index)
+		fileName := "mr-" + strconv.Itoa(count) + "-" + strconv.Itoa(Index)
 		file, err := os.Open(fileName)
 		if err != nil {
 			fmt.Println("can't open the %v", fileName)
@@ -187,11 +185,11 @@ func doReduce(reducef func(string, []string) string, reply *Reply) {
 		i = j
 	}
 
-	oname := "mr-out-" + strconv.Itoa(index)
+	oname := "mr-out-" + strconv.Itoa(Index)
 	os.Rename(filepath.Join(ofile.Name()), oname)
 	ofile.Close()
 
-	args := Args{"Reduce", index}
+	args := Args{"Reduce", Index}
 	re := Reply{}
 	call("Master.ReportJob", &args, &re)
 }
