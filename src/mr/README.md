@@ -1,6 +1,10 @@
 # Lab1 MapReduce
 [Lab intro](https://pdos.csail.mit.edu/6.824/labs/lab-mr.html)
 
+## MapReduce
+Users specify a *map* function that processes a key/value pair to generate
+a set of intermediate key/value, and *reduce* function merges all intermediate values associated with the same key.
+
 The basic idea is to have one master and multiple workers. Have the workers to ask for jobs repeatedly until all the jobs have done.
 
 - [worker.go](https://github.com/yeyypp/6.824-2020-Notes/blob/master/src/mr/worker.go)  
