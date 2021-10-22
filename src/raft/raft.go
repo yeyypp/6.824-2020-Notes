@@ -18,7 +18,6 @@ package raft
 //
 
 import (
-	"math/rand"
 	"sync"
 	"time"
 )
@@ -65,12 +64,12 @@ type Raft struct {
 	// state a Raft server must maintain.
 
 	// Persistent state on all servers
-	currentTerm int
-	votedFor    int
-	log         []*Entry
+	currentTerm  int
+	votedFor     int
+	log          []*Entry
 	currentState int
 
-	isleader    bool
+	isleader bool
 
 	// Volatile state on all servers
 	commitIndex int
@@ -80,7 +79,8 @@ type Raft struct {
 	nextIndex  int
 	matchIndex int
 
-	t *time.Timer
+	// election time out
+	electionTimeout int64
 }
 
 // return currentTerm and whether this server
@@ -178,30 +178,69 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	// Your code here (2A, 2B).
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
+
+
+	// Candidate term < currentTerm, return false
 	if args.Term < rf.currentTerm {
 		reply.Term = rf.currentTerm
 		reply.VoteGranted = false
 		return
 	}
 
-	if rf.votedFor == -1 || args.LastLogTerm > rf.currentTerm || (args.LastLogTerm == rf.currentTerm && args.LastLogIndex > len(rf.log)) {
+
+	// votedFor is null(here is -1), return true and update votedFor and currentTerm if term > currentTerm
+	if rf.votedFor == -1 {
+		rf.votedFor = args.CandidateId
+		rf.currentTerm = max(rf.currentState, args.Term)
 		reply.Term = rf.currentTerm
 		reply.VoteGranted = true
-		rf.votedFor = args.CandidateId
 		return
 	}
+
+	var currentLastLogTerm int
+	l := len(rf.log)
+	if l == 0 {
+		currentLastLogTerm = 0
+	} else {
+		currentLastLogTerm = rf.log[l - 1].Term
+	}
+
+	// the term won't < currentTerm in this situation
+	if args.LastLogTerm > currentLastLogTerm {
+		rf.votedFor = args.CandidateId
+		reply.VoteGranted = true
+	} else if args.LastLogTerm == currentLastLogTerm {
+		if args.LastLogIndex > l {
+			rf.votedFor = args.CandidateId
+			reply.VoteGranted = true
+		} else {
+			reply.VoteGranted = false
+		}
+	}
+
+	// update currentTerm to max term
+	rf.currentTerm = max(rf.currentTerm, args.Term)
+	reply.Term = rf.currentTerm
+	reply.VoteGranted = false
+
+	// reset timer
+	rf.electionTimeout = time.Now().Unix()
+}
+
+func max(i, j int) int {
+	if i > j {
+		return i
+	}
+	return j
 }
 
 func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply) {
-	rf.mu.Lock()
-	defer rf.mu.Unlock()
-	if args.Term < rf.currentTerm || rf.log[args.PrevLogTerm].Index != args.PrevLogIndex {
+	if args.Term < rf.currentTerm {
 		reply.Term = rf.currentTerm
 		reply.Success = false
 	}
-	reply.Term = rf.currentTerm
-	reply.Success = true
-	rf.resetTimer()
+
+
 }
 
 //
@@ -324,14 +363,5 @@ func Make(peers []*labrpc.ClientEnd, me int,
 	return rf
 }
 
-func (rf *Raft) periodicallyCheckState() {
-
-}
-
-func (rf *Raft) resetTimer() {
-
-}
-
-func (rf *Raft) startTimer() {
-	rf.t = time.NewTimer(time.Millisecond * time.Duration(rand.Intn(100)))
-}
+// TODO need two goruntine to send heart beat and start election
+// TODO send log in order on applyCh
