@@ -1,0 +1,12 @@
+Test (2A): initial election ...
+panic: runtime error: index out of range [3] with length 3
+
+goroutine 34 [running]:
+_/home/shuai/6.824/src/raft.(*Raft).sendRequestVote(...)
+	/home/shuai/6.824/src/raft/raft.go:327
+_/home/shuai/6.824/src/raft.(*Raft).reElection.func1(0xc0001442a0, 0xc00018e000, 0xc00018c000, 0xc00018c008, 0xc00018c010, 0xc00018c018)
+	/home/shuai/6.824/src/raft/raft.go:484 +0x3bc
+created by _/home/shuai/6.824/src/raft.(*Raft).reElection
+	/home/shuai/6.824/src/raft/raft.go:470 +0x233
+exit status 2
+FAIL	_/home/shuai/6.824/src/raft	0.207s
