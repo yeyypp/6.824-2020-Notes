@@ -20,6 +20,7 @@ package raft
 import (
 	"../labrpc"
 	"fmt"
+	"google.golang.org/grpc/credentials"
 	"math/rand"
 	"sync"
 	"sync/atomic"
@@ -377,7 +378,6 @@ func Make(peers []*labrpc.ClientEnd, me int,
 	rf.nextIndex = make([]int, len(peers))
 	rf.matchIndex = make([]int, len(peers))
 
-	rf.isLeader = false
 	rf.state = FOLLOWER
 
 	rf.lastElectionTime = time.Now()
@@ -400,8 +400,15 @@ func (rf *Raft) checkElection() {
 	for {
 		timeout := time.Duration(rf.getElectionTimeout()) * time.Millisecond
 		time.Sleep(timeout)
-		if time.Now().Sub(rf.lastElectionTime) >= timeout {
-			switch rf.state {
+
+		// because multiple goroutine may change state and lastElectionTime
+		rf.mu.Lock()
+		lastElectionTime := rf.lastElectionTime
+		state := rf.state
+		rf.mu.Unlock()
+
+		if time.Now().Sub(lastElectionTime) >= timeout {
+			switch state {
 			case FOLLOWER:
 				go rf.reElection()
 			case CANDIDATE:
@@ -415,52 +422,70 @@ func (rf *Raft) checkElection() {
 }
 
 func (rf *Raft) reElection() {
-	var curTerm int
-	var lastLogTerm int
-	var lastLogIndex int
+	// that's the term and index when this rf request votes
+	var sendingTerm int
+	var sendingLastLogTerm int
+	var sendingLastLogIndex int
 
 	rf.mu.Lock()
 	rf.currentTerm += 1
-	curTerm = rf.currentTerm
+	sendingTerm = rf.currentTerm
 	if len(rf.log) != 0 {
-		lastLogTerm = rf.log[len(rf.log)-1].Term
-		lastLogIndex = rf.log[len(rf.log)-1].Index
+		sendingLastLogTerm = rf.log[len(rf.log)-1].Term
+		sendingLastLogIndex = rf.log[len(rf.log)-1].Index
 	}
 
 	rf.votedFor = rf.me
 	rf.state = CANDIDATE
 	rf.lastElectionTime = time.Now()
-	rf.isLeader = false
 	rf.mu.Unlock()
 
 	electionResult := make(chan int)
 
 	for i := 0; i < len(rf.peers); i++ {
-		if i == rf.me {
+		if rf.me == i {
 			continue
 		}
+		curI := i
 		go func() {
-			if rf.state != CANDIDATE {
+			// when actually send the request, the term and state may different than the old
+			rf.mu.Lock()
+			curState := rf.state
+			curTerm := rf.currentTerm
+			rf.mu.Unlock()
+
+			if curState != CANDIDATE || curTerm != sendingTerm{
 				electionResult <- 0
 				return
 			}
 			args := &RequestVoteArgs{
 				Term:         curTerm,
 				CandidateId:  rf.me,
-				LastLogTerm:  lastLogTerm,
-				LastLogIndex: lastLogIndex,
+				LastLogTerm:  sendingLastLogTerm,
+				LastLogIndex: sendingLastLogIndex,
 			}
 
 			reply := &RequestVoteReply{}
 
-			for !rf.sendRequestVote(i, args, reply) {
-				continue
+			for !rf.sendRequestVote(curI, args, reply) {
+				rf.mu.Lock()
+				term := rf.currentTerm
+				state := rf.state
+				rf.mu.Unlock()
+
+				if term != sendingTerm || state != CANDIDATE {
+					break
+				}
 			}
 
-			curTerm2 := rf.currentTerm
-			if reply.Term > curTerm2 {
+			if reply.Term < sendingTerm {
+				electionResult <- 0
+				return
+			}
+
+			if reply.Term > sendingTerm && rf.state == CANDIDATE {
 				rf.mu.Lock()
-				fmt.Printf("reply.Term is %d, bigger than rf.currentTerm %d, change to follower.\n", reply.Term, curTerm2)
+				fmt.Printf("reply.Term is %d, bigger than sendingTerm %d, change to follower.\n", reply.Term, sendingTerm)
 				rf.changeToFollower(reply.Term)
 				rf.mu.Unlock()
 
@@ -482,9 +507,8 @@ func (rf *Raft) reElection() {
 	}
 
 	rf.mu.Lock()
-	if rf.currentTerm == curTerm && count > (len(rf.peers)-1)/2 && rf.state == CANDIDATE {
+	if rf.currentTerm == sendingTerm && count > (len(rf.peers)-1)/2 && rf.state == CANDIDATE {
 		rf.state = LEADER
-		rf.isLeader = true
 		go rf.sendHeartBeat()
 	}
 	rf.mu.Unlock()
@@ -493,17 +517,17 @@ func (rf *Raft) reElection() {
 func (rf *Raft) sendHeartBeat() {
 
 	for rf.state == LEADER {
-		var curTerm int
-		var preLogTerm int
-		var preLogIndex int
-		var leaderCommitIndex int
+		var sendingTerm int
+		var sendingPreLogTerm int
+		var sendingPreLogIndex int
+		var sendingLeaderCommitIndex int
 
 		rf.mu.Lock()
-		curTerm = rf.currentTerm
+		sendingTerm = rf.currentTerm
 		l := len(rf.log)
 		if l != 0 {
-			preLogTerm = rf.log[l-1].Term
-			preLogIndex = rf.log[l-1].Index
+			sendingPreLogTerm = rf.log[l-1].Term
+			sendingPreLogIndex = rf.log[l-1].Index
 		}
 		rf.mu.Unlock()
 
@@ -511,22 +535,42 @@ func (rf *Raft) sendHeartBeat() {
 			if i == rf.me {
 				continue
 			}
+			curI := i
+			rf.mu.Lock()
+			curState := rf.state
+			curTerm := rf.currentTerm
+
+			// TODO do we need to check if the preLogTerm/Index is same as sending...
+			//l2 := len(rf.log)
+			//curPreLogTerm := rf.log[l2-1].Term
+			//curPreLogIndex := rf.log[l2-1].Index
+
+			rf.mu.Unlock()
+
+			if curState != LEADER {
+				return
+			}
+			if curTerm != sendingTerm {
+				return
+			}
+
 			go func() {
-				if rf.state != LEADER {
-					return
-				}
+
+
 				args := &AppendEntriesArgs{
-					Term:     curTerm,
+					Term:     sendingTerm,
 					LeaderId: rf.me,
-					PrevLogTerm: preLogTerm,
-					PrevLogIndex: preLogIndex,
-					LeaderCommitIndex: leaderCommitIndex,
+					PrevLogTerm: sendingPreLogTerm,
+					PrevLogIndex: sendingPreLogIndex,
+					LeaderCommitIndex: sendingLeaderCommitIndex,
 				}
 
 				reply := &AppendEntriesReply{}
 
 				for !rf.sendAppendEntries(i, args, reply) {
-					continue
+					if rf.state != LEADER || rf.currentTerm != sendingTerm {
+						return
+					}
 				}
 
 				curTerm2 := rf.currentTerm
