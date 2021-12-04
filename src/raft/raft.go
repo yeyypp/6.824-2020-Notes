@@ -215,7 +215,7 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	}
 
 	l := len(rf.log)
-	if l == 0 || args.LastLogTerm > rf.log[l-1].Term || (args.LastLogTerm > rf.log[l-1].Term && args.LastLogIndex > rf.log[l-1].Index) {
+	if l == 0 || args.LastLogTerm > rf.log[l-1].Term || (args.LastLogTerm == rf.log[l-1].Term && args.LastLogIndex > rf.log[l-1].Index) {
 		rf.votedFor = args.CandidateId
 		reply.Term = rf.currentTerm
 		reply.VoteGranted = true
@@ -567,21 +567,24 @@ func (rf *Raft) sendHeartBeat() {
 
 				reply := &AppendEntriesReply{}
 
-				for !rf.sendAppendEntries(i, args, reply) {
+				for !rf.sendAppendEntries(curI, args, reply) {
 					if rf.state != LEADER || rf.currentTerm != sendingTerm {
 						return
 					}
 				}
 
-				curTerm2 := rf.currentTerm
-
-				if reply.Term > curTerm2 {
-					rf.mu.Lock()
-					fmt.Printf("reply.Term is %d, bigger than rf.currentTerm %d, change to follower.\n", reply.Term, curTerm2)
-					rf.changeToFollower(reply.Term)
-					rf.mu.Unlock()
-					return
-				}
+				rf.mu.Lock()
+				curTerm = rf.currentTerm
+				rf.mu.Unlock()
+				// TODO
+				//
+				//if reply.Term > curTerm2 {
+				//	rf.mu.Lock()
+				//	fmt.Printf("reply.Term is %d, bigger than rf.currentTerm %d, change to follower.\n", reply.Term, curTerm2)
+				//	rf.changeToFollower(reply.Term)
+				//	rf.mu.Unlock()
+				//	return
+				//}
 
 				if reply.Term == curTerm2 && reply.Success == false {
 					rf.mu.Lock()
@@ -599,7 +602,6 @@ func (rf *Raft) sendHeartBeat() {
 func (rf *Raft) changeToFollower(term int) {
 	rf.currentTerm = term
 	rf.votedFor = -1
-	rf.lastElectionTime = time.Now()
 	rf.state = FOLLOWER
 }
 
