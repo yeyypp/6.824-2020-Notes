@@ -1,12 +1,397 @@
-Test (2A): initial election ...
-panic: runtime error: index out of range [3] with length 3
-
-goroutine 34 [running]:
-_/home/shuai/6.824/src/raft.(*Raft).sendRequestVote(...)
-	/home/shuai/6.824/src/raft/raft.go:327
-_/home/shuai/6.824/src/raft.(*Raft).reElection.func1(0xc0001442a0, 0xc00018e000, 0xc00018c000, 0xc00018c008, 0xc00018c010, 0xc00018c018)
-	/home/shuai/6.824/src/raft/raft.go:484 +0x3bc
-created by _/home/shuai/6.824/src/raft.(*Raft).reElection
-	/home/shuai/6.824/src/raft/raft.go:470 +0x233
-exit status 2
-FAIL	_/home/shuai/6.824/src/raft	0.207s
+Test (2A): election after network failure ...
+CheckElection ---> node:0, term:0, state:FOLLOWER
+CheckElection ---> node:0, term:0, state:FOLLOWER has timeout! timeout:152ms
+ReElection ---> node:0, term:1, state:CANDIDATE
+RequestVote ---> node:1, term:0, state:FOLLOWER, args:&{Term:1 CandidateId:0 LastLogIndex:0 LastLogTerm:0}
+RequestVote ---> node:1, term:1, state:FOLLOWER, voted for:0
+RequestVote ---> node:2, term:0, state:FOLLOWER, args:&{Term:1 CandidateId:0 LastLogIndex:0 LastLogTerm:0}
+RequestVote ---> node:2, term:1, state:FOLLOWER, voted for:0
+Election Result: node:0, term:1, state:CANDIDATE, count:2
+SendHeartBeat ---> node:0, term:1, state:LEADER
+AppendEntries ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries ---> node:1, term:1, state:FOLLOWER receive heartbeat from 0
+AppendEntries ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries ---> node:2, term:1, state:FOLLOWER receive heartbeat from 0
+CheckElection ---> node:1, term:1, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+AppendEntries ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries ---> node:1, term:1, state:FOLLOWER receive heartbeat from 0
+AppendEntries ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries ---> node:2, term:1, state:FOLLOWER receive heartbeat from 0
+CheckElection ---> node:2, term:1, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+AppendEntries ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries ---> node:1, term:1, state:FOLLOWER receive heartbeat from 0
+AppendEntries ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries ---> node:2, term:1, state:FOLLOWER receive heartbeat from 0
+SendHeartBeat ---> node:0, term:1, state:LEADER
+AppendEntries ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries ---> node:1, term:1, state:FOLLOWER receive heartbeat from 0
+AppendEntries ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries ---> node:2, term:1, state:FOLLOWER receive heartbeat from 0
+SendHeartBeat ---> node:0, term:1, state:LEADER
+AppendEntries ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries ---> node:2, term:1, state:FOLLOWER receive heartbeat from 0
+AppendEntries ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries ---> node:1, term:1, state:FOLLOWER receive heartbeat from 0
+SendHeartBeat ---> node:0, term:1, state:LEADER
+AppendEntries ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries ---> node:2, term:1, state:FOLLOWER receive heartbeat from 0
+AppendEntries ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries ---> node:1, term:1, state:FOLLOWER receive heartbeat from 0
+CheckElection ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER has timeout! timeout:283ms
+0 is leader now
+SendHeartBeat ---> node:0, term:1, state:LEADER
+AppendEntries ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries ---> node:1, term:1, state:FOLLOWER receive heartbeat from 0
+AppendEntries ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries ---> node:2, term:1, state:FOLLOWER receive heartbeat from 0
+SendHeartBeat ---> node:0, term:1, state:LEADER
+AppendEntries ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries ---> node:2, term:1, state:FOLLOWER receive heartbeat from 0
+AppendEntries ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries ---> node:1, term:1, state:FOLLOWER receive heartbeat from 0
+CheckElection ---> node:1, term:1, state:FOLLOWER
+CheckElection ---> node:2, term:1, state:FOLLOWER
+GetState ---> node:0, term:1, state:LEADER
+GetState ---> node:1, term:1, state:FOLLOWER
+GetState ---> node:2, term:1, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER has timeout! timeout:158ms
+0 is leader now
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:1, term:1, state:FOLLOWER
+CheckElection ---> node:1, term:1, state:FOLLOWER has timeout! timeout:164ms
+ReElection ---> node:1, term:2, state:CANDIDATE
+RequestVote ---> node:2, term:1, state:FOLLOWER, args:&{Term:2 CandidateId:1 LastLogIndex:0 LastLogTerm:0}
+RequestVote ---> node:2, term:2, state:FOLLOWER, voted for:1
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:2, term:2, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER has timeout! timeout:198ms
+0 is leader now
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:2, term:2, state:FOLLOWER
+CheckElection ---> node:2, term:2, state:FOLLOWER has timeout! timeout:161ms
+ReElection ---> node:2, term:3, state:CANDIDATE
+RequestVote ---> node:1, term:2, state:CANDIDATE, args:&{Term:3 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
+RequestVote ---> node:1, term:3, state:FOLLOWER, voted for:2
+CheckElection ---> node:1, term:3, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+GetState ---> node:1, term:3, state:FOLLOWER
+GetState ---> node:2, term:3, state:CANDIDATE
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER has timeout! timeout:200ms
+0 is leader now
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:2, term:3, state:CANDIDATE
+CheckElection ---> node:2, term:3, state:CANDIDATE has timeout! timeout:176ms
+ReElection ---> node:2, term:4, state:CANDIDATE
+RequestVote ---> node:1, term:3, state:FOLLOWER, args:&{Term:4 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
+RequestVote ---> node:1, term:4, state:FOLLOWER, voted for:2
+CheckElection ---> node:1, term:4, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER has timeout! timeout:247ms
+0 is leader now
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:1, term:4, state:FOLLOWER
+CheckElection ---> node:1, term:4, state:FOLLOWER has timeout! timeout:222ms
+ReElection ---> node:1, term:5, state:CANDIDATE
+RequestVote ---> node:2, term:4, state:CANDIDATE, args:&{Term:5 CandidateId:1 LastLogIndex:0 LastLogTerm:0}
+RequestVote ---> node:2, term:5, state:FOLLOWER, voted for:1
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:2, term:5, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+GetState ---> node:1, term:5, state:CANDIDATE
+GetState ---> node:2, term:5, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER has timeout! timeout:250ms
+0 is leader now
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:1, term:5, state:CANDIDATE
+CheckElection ---> node:1, term:5, state:CANDIDATE has timeout! timeout:282ms
+SendHeartBeat ---> node:0, term:1, state:LEADER
+ReElection ---> node:1, term:6, state:CANDIDATE
+RequestVote ---> node:2, term:5, state:FOLLOWER, args:&{Term:6 CandidateId:1 LastLogIndex:0 LastLogTerm:0}
+RequestVote ---> node:2, term:6, state:FOLLOWER, voted for:1
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:2, term:6, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:1, term:6, state:CANDIDATE
+CheckElection ---> node:1, term:6, state:CANDIDATE has timeout! timeout:153ms
+ReElection ---> node:1, term:7, state:CANDIDATE
+RequestVote ---> node:2, term:6, state:FOLLOWER, args:&{Term:7 CandidateId:1 LastLogIndex:0 LastLogTerm:0}
+RequestVote ---> node:2, term:7, state:FOLLOWER, voted for:1
+CheckElection ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER has timeout! timeout:289ms
+0 is leader now
+CheckElection ---> node:2, term:7, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:1, term:7, state:CANDIDATE
+CheckElection ---> node:1, term:7, state:CANDIDATE has timeout! timeout:171ms
+ReElection ---> node:1, term:8, state:CANDIDATE
+RequestVote ---> node:2, term:7, state:FOLLOWER, args:&{Term:8 CandidateId:1 LastLogIndex:0 LastLogTerm:0}
+RequestVote ---> node:2, term:8, state:FOLLOWER, voted for:1
+GetState ---> node:1, term:8, state:CANDIDATE
+GetState ---> node:2, term:8, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER has timeout! timeout:256ms
+0 is leader now
+CheckElection ---> node:2, term:8, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:1, term:8, state:CANDIDATE
+CheckElection ---> node:1, term:8, state:CANDIDATE has timeout! timeout:292ms
+ReElection ---> node:1, term:9, state:CANDIDATE
+RequestVote ---> node:2, term:8, state:FOLLOWER, args:&{Term:9 CandidateId:1 LastLogIndex:0 LastLogTerm:0}
+RequestVote ---> node:2, term:9, state:FOLLOWER, voted for:1
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER has timeout! timeout:294ms
+0 is leader now
+CheckElection ---> node:2, term:9, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:1, term:9, state:CANDIDATE
+CheckElection ---> node:1, term:9, state:CANDIDATE has timeout! timeout:224ms
+ReElection ---> node:1, term:10, state:CANDIDATE
+RequestVote ---> node:2, term:9, state:FOLLOWER, args:&{Term:10 CandidateId:1 LastLogIndex:0 LastLogTerm:0}
+RequestVote ---> node:2, term:10, state:FOLLOWER, voted for:1
+GetState ---> node:1, term:10, state:CANDIDATE
+GetState ---> node:2, term:10, state:FOLLOWER
+CheckElection ---> node:2, term:10, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER has timeout! timeout:196ms
+0 is leader now
+SendHeartBeat ---> node:0, term:1, state:LEADER
+Election Result: node:1, term:10, state:CANDIDATE, count:1
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:1, term:10, state:CANDIDATE
+CheckElection ---> node:1, term:10, state:CANDIDATE has timeout! timeout:197ms
+ReElection ---> node:1, term:11, state:CANDIDATE
+RequestVote ---> node:2, term:10, state:FOLLOWER, args:&{Term:11 CandidateId:1 LastLogIndex:0 LastLogTerm:0}
+RequestVote ---> node:2, term:11, state:FOLLOWER, voted for:1
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:2, term:11, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER has timeout! timeout:278ms
+0 is leader now
+CheckElection ---> node:1, term:11, state:CANDIDATE
+CheckElection ---> node:1, term:11, state:CANDIDATE has timeout! timeout:198ms
+ReElection ---> node:1, term:12, state:CANDIDATE
+RequestVote ---> node:2, term:11, state:FOLLOWER, args:&{Term:12 CandidateId:1 LastLogIndex:0 LastLogTerm:0}
+RequestVote ---> node:2, term:12, state:FOLLOWER, voted for:1
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:2, term:12, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:1, term:12, state:CANDIDATE
+CheckElection ---> node:1, term:12, state:CANDIDATE has timeout! timeout:155ms
+ReElection ---> node:1, term:13, state:CANDIDATE
+RequestVote ---> node:2, term:12, state:FOLLOWER, args:&{Term:13 CandidateId:1 LastLogIndex:0 LastLogTerm:0}
+RequestVote ---> node:2, term:13, state:FOLLOWER, voted for:1
+Election Result: node:1, term:13, state:CANDIDATE, count:1
+CheckElection ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER has timeout! timeout:226ms
+0 is leader now
+GetState ---> node:1, term:13, state:CANDIDATE
+GetState ---> node:2, term:13, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:2, term:13, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER has timeout! timeout:156ms
+0 is leader now
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:1, term:13, state:CANDIDATE
+CheckElection ---> node:1, term:13, state:CANDIDATE has timeout! timeout:274ms
+ReElection ---> node:1, term:14, state:CANDIDATE
+RequestVote ---> node:2, term:13, state:FOLLOWER, args:&{Term:14 CandidateId:1 LastLogIndex:0 LastLogTerm:0}
+RequestVote ---> node:2, term:14, state:FOLLOWER, voted for:1
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER has timeout! timeout:185ms
+0 is leader now
+SendHeartBeat ---> node:0, term:1, state:LEADER
+Election Result: node:2, term:14, state:FOLLOWER, count:1
+CheckElection ---> node:2, term:14, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+GetState ---> node:1, term:14, state:CANDIDATE
+GetState ---> node:2, term:14, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:1, term:14, state:CANDIDATE
+CheckElection ---> node:1, term:14, state:CANDIDATE has timeout! timeout:272ms
+ReElection ---> node:1, term:15, state:CANDIDATE
+RequestVote ---> node:2, term:14, state:FOLLOWER, args:&{Term:15 CandidateId:1 LastLogIndex:0 LastLogTerm:0}
+RequestVote ---> node:2, term:15, state:FOLLOWER, voted for:1
+SendHeartBeat ---> node:0, term:1, state:LEADER
+Election Result: node:1, term:15, state:CANDIDATE, count:1
+CheckElection ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER has timeout! timeout:212ms
+0 is leader now
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:2, term:15, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:1, term:15, state:CANDIDATE
+CheckElection ---> node:1, term:15, state:CANDIDATE has timeout! timeout:277ms
+ReElection ---> node:1, term:16, state:CANDIDATE
+RequestVote ---> node:2, term:15, state:FOLLOWER, args:&{Term:16 CandidateId:1 LastLogIndex:0 LastLogTerm:0}
+RequestVote ---> node:2, term:16, state:FOLLOWER, voted for:1
+CheckElection ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER has timeout! timeout:246ms
+0 is leader now
+CheckElection ---> node:2, term:16, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+Election Result: node:1, term:16, state:CANDIDATE, count:1
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+GetState ---> node:1, term:16, state:CANDIDATE
+GetState ---> node:2, term:16, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:1, term:16, state:CANDIDATE
+CheckElection ---> node:1, term:16, state:CANDIDATE has timeout! timeout:213ms
+ReElection ---> node:1, term:17, state:CANDIDATE
+RequestVote ---> node:2, term:16, state:FOLLOWER, args:&{Term:17 CandidateId:1 LastLogIndex:0 LastLogTerm:0}
+RequestVote ---> node:2, term:17, state:FOLLOWER, voted for:1
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:2, term:17, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER has timeout! timeout:280ms
+0 is leader now
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:1, term:17, state:CANDIDATE
+CheckElection ---> node:1, term:17, state:CANDIDATE has timeout! timeout:281ms
+ReElection ---> node:1, term:18, state:CANDIDATE
+RequestVote ---> node:2, term:17, state:FOLLOWER, args:&{Term:18 CandidateId:1 LastLogIndex:0 LastLogTerm:0}
+RequestVote ---> node:2, term:18, state:FOLLOWER, voted for:1
+Election Result: node:1, term:18, state:CANDIDATE, count:1
+CheckElection ---> node:2, term:18, state:FOLLOWER
+CheckElection ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER has timeout! timeout:240ms
+0 is leader now
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+Election Result: node:1, term:18, state:CANDIDATE, count:1
+CheckElection ---> node:2, term:18, state:FOLLOWER
+CheckElection ---> node:2, term:18, state:FOLLOWER has timeout! timeout:184ms
+ReElection ---> node:2, term:19, state:CANDIDATE
+RequestVote ---> node:1, term:18, state:CANDIDATE, args:&{Term:19 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
+RequestVote ---> node:1, term:19, state:FOLLOWER, voted for:2
+GetState ---> node:1, term:19, state:FOLLOWER
+GetState ---> node:2, term:19, state:CANDIDATE
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER has timeout! timeout:197ms
+0 is leader now
+CheckElection ---> node:1, term:19, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+Election Result: node:1, term:19, state:FOLLOWER, count:1
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER has timeout! timeout:168ms
+0 is leader now
+CheckElection ---> node:2, term:19, state:CANDIDATE
+CheckElection ---> node:2, term:19, state:CANDIDATE has timeout! timeout:186ms
+ReElection ---> node:2, term:20, state:CANDIDATE
+RequestVote ---> node:1, term:19, state:FOLLOWER, args:&{Term:20 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
+RequestVote ---> node:1, term:20, state:FOLLOWER, voted for:2
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:1, term:20, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:2, term:20, state:CANDIDATE
+CheckElection ---> node:2, term:20, state:CANDIDATE has timeout! timeout:171ms
+ReElection ---> node:2, term:21, state:CANDIDATE
+RequestVote ---> node:1, term:20, state:FOLLOWER, args:&{Term:21 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
+RequestVote ---> node:1, term:21, state:FOLLOWER, voted for:2
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+Election Result: node:1, term:21, state:FOLLOWER, count:1
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER has timeout! timeout:296ms
+0 is leader now
+SendHeartBeat ---> node:0, term:1, state:LEADER
+GetState ---> node:1, term:21, state:FOLLOWER
+GetState ---> node:2, term:21, state:CANDIDATE
+CheckElection ---> node:2, term:21, state:CANDIDATE
+CheckElection ---> node:2, term:21, state:CANDIDATE has timeout! timeout:210ms
+ReElection ---> node:2, term:22, state:CANDIDATE
+RequestVote ---> node:1, term:21, state:FOLLOWER, args:&{Term:22 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
+RequestVote ---> node:1, term:22, state:FOLLOWER, voted for:2
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:1, term:22, state:FOLLOWER
+CheckElection ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER has timeout! timeout:181ms
+0 is leader now
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:2, term:22, state:CANDIDATE
+CheckElection ---> node:2, term:22, state:CANDIDATE has timeout! timeout:173ms
+ReElection ---> node:2, term:23, state:CANDIDATE
+RequestVote ---> node:1, term:22, state:FOLLOWER, args:&{Term:23 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
+RequestVote ---> node:1, term:23, state:FOLLOWER, voted for:2
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:1, term:23, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER has timeout! timeout:220ms
+0 is leader now
+CheckElection ---> node:2, term:23, state:CANDIDATE
+CheckElection ---> node:2, term:23, state:CANDIDATE has timeout! timeout:169ms
+ReElection ---> node:2, term:24, state:CANDIDATE
+RequestVote ---> node:1, term:23, state:FOLLOWER, args:&{Term:24 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
+RequestVote ---> node:1, term:24, state:FOLLOWER, voted for:2
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:1, term:24, state:FOLLOWER
+SendHeartBeat ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER
+CheckElection ---> node:0, term:1, state:LEADER has timeout! timeout:162ms
+0 is leader now
+GetState ---> node:1, term:24, state:FOLLOWER
+GetState ---> node:2, term:24, state:CANDIDATE
+--- FAIL: TestReElection2A (5.60s)
+    config.go:330: expected one leader, got none
+FAIL
+exit status 1
+FAIL	_/home/shuai/Projects/6.824/src/raft	5.599s
