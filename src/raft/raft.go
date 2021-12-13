@@ -414,12 +414,8 @@ func Make(peers []*labrpc.ClientEnd, me int,
 
 // TODO send log in order on applyCh
 func (rf *Raft) checkElection() {
-	if rf.killed() {
-		fmt.Printf("node:%d down\n", rf.me)
-		return
-	}
 
-	fun := "CheckElection --->"
+
 	for {
 		if rf.killed() {
 			fmt.Printf("node:%d down\n", rf.me)
@@ -432,11 +428,10 @@ func (rf *Raft) checkElection() {
 		rf.mu.Lock()
 		lastElectionTime := rf.lastElectionTime
 		state := rf.state
-		fmt.Printf("%s node:%d, term:%d, state:%s\n", fun, rf.me, rf.currentTerm, rf.state)
 		rf.mu.Unlock()
 
 		if time.Now().Sub(lastElectionTime) >= timeout {
-			fmt.Printf("After %s node:%d, term:%d, state:%s has timeout! timeout:%v\n", fun, rf.me, rf.currentTerm, rf.state, timeout)
+			fmt.Printf(" %s node:%d, term:%d, state:%s has timeout! timeout:%v\n", "timeout", rf.me, rf.currentTerm, rf.state, timeout)
 			switch state {
 			case FOLLOWER:
 				go rf.reElection()
@@ -461,6 +456,7 @@ func (rf *Raft) reElection() {
 	var sendingTerm int
 	var sendingLastLogTerm int
 	var sendingLastLogIndex int
+	var sendingState STATE
 
 	rf.mu.Lock()
 	rf.currentTerm += 1
@@ -472,6 +468,7 @@ func (rf *Raft) reElection() {
 
 	rf.votedFor = rf.me
 	rf.state = CANDIDATE
+	sendingState = CANDIDATE
 	rf.lastElectionTime = time.Now()
 	fmt.Printf("%s node:%d, term:%d, state:%s\n", fun, rf.me, rf.currentTerm, rf.state)
 	rf.mu.Unlock()
@@ -491,13 +488,18 @@ func (rf *Raft) reElection() {
 		curI := i
 		go func() {
 			defer wg.Done()
+			if rf.killed() {
+				fmt.Printf("node:%d down\n", rf.me)
+				return
+			}
+
 			// when actually send the request, the term and state may different than the old
 			rf.mu.Lock()
-			curState := rf.state
-			curTerm := rf.currentTerm
+			state := rf.state
+			term := rf.currentTerm
 			rf.mu.Unlock()
 
-			if curState != CANDIDATE || curTerm != sendingTerm{
+			if state != CANDIDATE || term != sendingTerm{
 				return
 			}
 			args := &RequestVoteArgs{
@@ -516,13 +518,21 @@ func (rf *Raft) reElection() {
 				}
 
 				rf.mu.Lock()
-				term := rf.currentTerm
-				state := rf.state
+				term = rf.currentTerm
+				state = rf.state
 				rf.mu.Unlock()
 
 				if term != sendingTerm || state != CANDIDATE {
 					return
 				}
+			}
+
+			rf.mu.Lock()
+			term = rf.currentTerm
+			state = rf.state
+			rf.mu.Unlock()
+			if term != sendingTerm || state != CANDIDATE {
+				return
 			}
 
 			if reply.Term < sendingTerm {
@@ -531,7 +541,7 @@ func (rf *Raft) reElection() {
 
 			if reply.Term > sendingTerm && rf.state == CANDIDATE {
 				rf.mu.Lock()
-				fmt.Printf("reply.Term is %d, bigger than sendingTerm %d, change to follower.\n", reply.Term, sendingTerm)
+				fmt.Printf("Step down, node:%d change to follower.\n", rf.me)
 				rf.changeToFollower(reply.Term)
 				rf.mu.Unlock()
 
@@ -546,8 +556,8 @@ func (rf *Raft) reElection() {
 
 	wg.Wait()
 	rf.mu.Lock()
-	fmt.Printf("Election Result: node:%d, term:%d, state:%s, count:%d\n", rf.me, rf.currentTerm, rf.state,count)
-	if rf.currentTerm == sendingTerm && count > uint64((len(rf.peers)-1)/2) && rf.state == CANDIDATE {
+	fmt.Printf("Election Result: node:%d, sendingTerm:%d, term:%d, sendingState:%s, state:%s, count:%d\n", rf.me, sendingTerm, rf.currentTerm, sendingState, rf.state,count)
+	if !rf.killed() && rf.currentTerm == sendingTerm && count > uint64((len(rf.peers)-1)/2) && rf.state == CANDIDATE {
 		rf.state = LEADER
 		go rf.sendHeartBeat()
 	}
@@ -610,14 +620,24 @@ func (rf *Raft) sendHeartBeat() {
 						}
 
 						rf.mu.Lock()
-						curState2 := rf.state
-						curTerm := rf.currentTerm
+						state := rf.state
+						term := rf.currentTerm
 						rf.mu.Unlock()
 
-						if curState2 != LEADER || curTerm != sendingTerm {
+						if state != LEADER || term != sendingTerm {
 							return
 						}
 					}
+
+					rf.mu.Lock()
+					term := rf.currentTerm
+					state := rf.state
+					rf.mu.Unlock()
+					if term != sendingTerm || state != LEADER {
+						return
+					}
+
+
 
 					if reply.Term < sendingTerm {
 						return
@@ -628,6 +648,7 @@ func (rf *Raft) sendHeartBeat() {
 						rf.nextIndex[i] -= 1
 						rf.mu.Unlock()
 					}
+
 					if reply.Term > sendingTerm {
 						rf.mu.Lock()
 						fmt.Printf("node %d change to follower, term: %d\n", rf.me, reply.Term)
