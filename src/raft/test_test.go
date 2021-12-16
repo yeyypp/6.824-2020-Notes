@@ -974,3 +974,19 @@ func TestReliableChurn2C(t *testing.T) {
 func TestUnreliableChurn2C(t *testing.T) {
 	internalChurn(t, true)
 }
+
+
+func TestKill(t *testing.T) {
+	servers := 3
+	cfg := make_config(t, servers, false)
+	defer cfg.cleanup()
+
+	cfg.begin("Test (2A): initial election")
+
+	// is a leader elected?
+	cfg.checkOneLeader()
+	leader := cfg.checkOneLeader()
+	cfg.rafts[leader].Kill()
+	time.Sleep(5 * time.Second)
+	cfg.end()
+}
