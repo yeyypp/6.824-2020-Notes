@@ -1,5 +1,5 @@
 Test (2A): initial election ...
- CheckElection ---> Timeout! node:2, term:0, state:FOLLOWER 
+ ReElection ---> node:2, term:0, state:FOLLOWER 
 RequestVote Receive ---> node:0, term:0, state:FOLLOWER, args:&{Term:1 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
 RequestVote Receive ---> node:1, term:0, state:FOLLOWER, args:&{Term:1 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
@@ -12,8 +12,6 @@ AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderI
 AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
@@ -22,185 +20,25 @@ AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderI
 AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
- CheckElection ---> Timeout! node:2, term:1, state:LEADER 
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 Node:2 is leader now
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
- CheckElection ---> Timeout! node:2, term:1, state:LEADER 
-Node:2 is leader now
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
- CheckElection ---> Timeout! node:2, term:1, state:LEADER 
-Node:2 is leader now
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
- CheckElection ---> Timeout! node:2, term:1, state:LEADER 
-Node:2 is leader now
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
- CheckElection ---> Timeout! node:2, term:1, state:LEADER 
-Node:2 is leader now
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
- CheckElection ---> Timeout! node:2, term:1, state:LEADER 
-Node:2 is leader now
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
- CheckElection ---> Timeout! node:2, term:1, state:LEADER 
-Node:2 is leader now
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
- CheckElection ---> Timeout! node:2, term:1, state:LEADER 
-Node:2 is leader now
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
- CheckElection ---> Timeout! node:2, term:1, state:LEADER 
-Node:2 is leader now
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
- CheckElection ---> Timeout! node:2, term:1, state:LEADER 
 Node:2 is leader now
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
@@ -219,17 +57,138 @@ AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderI
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+Node:2 is leader now
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
- CheckElection ---> Timeout! node:2, term:1, state:LEADER 
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+Node:2 is leader now
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+Node:2 is leader now
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+Node:2 is leader now
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+Node:2 is leader now
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 Node:2 is leader now
 AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+Node:2 is leader now
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+Node:2 is leader now
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
@@ -237,13 +196,32 @@ AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderI
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
- CheckElection ---> Timeout! node:2, term:1, state:LEADER 
 Node:2 is leader now
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+Node:2 is leader now
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
@@ -252,138 +230,253 @@ AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderI
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-  ... Passed --  real time: 3.1  number of Raft peers:3 number of RPC sends: 230 number of bytes:  60740 number of Raft agreements reported:   0
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:2 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+  ... Passed --  real time: 3.0  number of Raft peers:3 number of RPC sends: 226 number of bytes:  59680 number of Raft agreements reported:   0
 Test (2A): election after network failure ...
 node:0, killed:true
-node:1, killed:true
- CheckElection ---> Timeout! node:2, term:1, state:LEADER 
 Node:2 is leader now
 node:2, killed:true
- CheckElection ---> Timeout! node:1, term:0, state:FOLLOWER 
-RequestVote Receive ---> node:0, term:0, state:FOLLOWER, args:&{Term:1 CandidateId:1 LastLogIndex:0 LastLogTerm:0}
-RequestVote Receive ---> node:2, term:0, state:FOLLOWER, args:&{Term:1 CandidateId:1 LastLogIndex:0 LastLogTerm:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
-AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
- CheckElection ---> Timeout! node:1, term:1, state:LEADER 
+node:1, killed:true
+ ReElection ---> node:0, term:0, state:FOLLOWER 
+RequestVote Receive ---> node:1, term:0, state:FOLLOWER, args:&{Term:1 CandidateId:0 LastLogIndex:0 LastLogTerm:0}
+RequestVote Receive ---> node:2, term:0, state:FOLLOWER, args:&{Term:1 CandidateId:0 LastLogIndex:0 LastLogTerm:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+Node:0 is leader now
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+Node:0 is leader now
+ ReElection ---> node:1, term:1, state:FOLLOWER 
+RequestVote Receive ---> node:2, term:1, state:FOLLOWER, args:&{Term:2 CandidateId:1 LastLogIndex:0 LastLogTerm:0}
+Node:0 is leader now
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:2, state:LEADER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:2, state:LEADER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:2, state:LEADER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:2, state:LEADER, args:&{Term:1 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 Node:1 is leader now
- CheckElection ---> Timeout! node:1, term:1, state:LEADER 
+AppendEntries Receive ---> node:0, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 Node:1 is leader now
- CheckElection ---> Timeout! node:2, term:1, state:FOLLOWER 
-RequestVote Receive ---> node:0, term:1, state:FOLLOWER, args:&{Term:2 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
- CheckElection ---> Timeout! node:2, term:2, state:CANDIDATE 
-RequestVote Receive ---> node:0, term:2, state:FOLLOWER, args:&{Term:3 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
- CheckElection ---> Timeout! node:1, term:1, state:LEADER 
+AppendEntries Receive ---> node:0, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:2, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 Node:1 is leader now
- CheckElection ---> Timeout! node:1, term:1, state:LEADER 
 Node:1 is leader now
- CheckElection ---> Timeout! node:2, term:3, state:CANDIDATE 
-RequestVote Receive ---> node:0, term:3, state:FOLLOWER, args:&{Term:4 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
- CheckElection ---> Timeout! node:1, term:1, state:LEADER 
+ ReElection ---> node:2, term:2, state:FOLLOWER 
+ ReElection ---> node:0, term:2, state:FOLLOWER 
 Node:1 is leader now
- CheckElection ---> Timeout! node:2, term:4, state:CANDIDATE 
-RequestVote Receive ---> node:0, term:4, state:FOLLOWER, args:&{Term:5 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
- CheckElection ---> Timeout! node:1, term:1, state:LEADER 
+ ReElection ---> node:2, term:3, state:CANDIDATE 
 Node:1 is leader now
- CheckElection ---> Timeout! node:2, term:5, state:CANDIDATE 
-RequestVote Receive ---> node:0, term:5, state:FOLLOWER, args:&{Term:6 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
- CheckElection ---> Timeout! node:1, term:1, state:LEADER 
+ ReElection ---> node:0, term:3, state:CANDIDATE 
+ ReElection ---> node:2, term:4, state:CANDIDATE 
 Node:1 is leader now
- CheckElection ---> Timeout! node:2, term:6, state:CANDIDATE 
-RequestVote Receive ---> node:0, term:6, state:FOLLOWER, args:&{Term:7 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
- CheckElection ---> Timeout! node:1, term:1, state:LEADER 
+ ReElection ---> node:0, term:4, state:CANDIDATE 
+ ReElection ---> node:0, term:5, state:CANDIDATE 
 Node:1 is leader now
- CheckElection ---> Timeout! node:2, term:7, state:CANDIDATE 
-RequestVote Receive ---> node:0, term:7, state:FOLLOWER, args:&{Term:8 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
- CheckElection ---> Timeout! node:1, term:1, state:LEADER 
+ ReElection ---> node:2, term:5, state:CANDIDATE 
+ ReElection ---> node:0, term:6, state:CANDIDATE 
 Node:1 is leader now
- CheckElection ---> Timeout! node:2, term:8, state:CANDIDATE 
-RequestVote Receive ---> node:0, term:8, state:FOLLOWER, args:&{Term:9 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
- CheckElection ---> Timeout! node:1, term:1, state:LEADER 
+ ReElection ---> node:0, term:7, state:CANDIDATE 
 Node:1 is leader now
- CheckElection ---> Timeout! node:0, term:9, state:FOLLOWER 
- CheckElection ---> Timeout! node:2, term:9, state:CANDIDATE 
-RequestVote Receive ---> node:2, term:10, state:CANDIDATE, args:&{Term:10 CandidateId:0 LastLogIndex:0 LastLogTerm:0}
-RequestVote Receive ---> node:0, term:10, state:CANDIDATE, args:&{Term:10 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
- CheckElection ---> Timeout! node:1, term:1, state:LEADER 
+ ReElection ---> node:2, term:6, state:CANDIDATE 
 Node:1 is leader now
- CheckElection ---> Timeout! node:0, term:10, state:CANDIDATE 
-RequestVote Receive ---> node:2, term:10, state:CANDIDATE, args:&{Term:11 CandidateId:0 LastLogIndex:0 LastLogTerm:0}
- CheckElection ---> Timeout! node:1, term:1, state:LEADER 
+ ReElection ---> node:0, term:8, state:CANDIDATE 
+ ReElection ---> node:0, term:9, state:CANDIDATE 
 Node:1 is leader now
- CheckElection ---> Timeout! node:1, term:1, state:LEADER 
 Node:1 is leader now
- CheckElection ---> Timeout! node:2, term:11, state:FOLLOWER 
-RequestVote Receive ---> node:0, term:11, state:CANDIDATE, args:&{Term:12 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
- CheckElection ---> Timeout! node:1, term:1, state:LEADER 
+ ReElection ---> node:2, term:7, state:CANDIDATE 
+RequestVote Receive ---> node:0, term:10, state:CANDIDATE, args:&{Term:8 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
+ ReElection ---> node:0, term:10, state:CANDIDATE 
+RequestVote Receive ---> node:2, term:10, state:FOLLOWER, args:&{Term:11 CandidateId:0 LastLogIndex:0 LastLogTerm:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 Node:1 is leader now
- CheckElection ---> Timeout! node:2, term:12, state:CANDIDATE 
-RequestVote Receive ---> node:0, term:12, state:FOLLOWER, args:&{Term:13 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
- CheckElection ---> Timeout! node:2, term:13, state:CANDIDATE 
-RequestVote Receive ---> node:0, term:13, state:FOLLOWER, args:&{Term:14 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
- CheckElection ---> Timeout! node:1, term:1, state:LEADER 
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+Node:0 is leader now
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
 Node:1 is leader now
- CheckElection ---> Timeout! node:2, term:14, state:CANDIDATE 
-RequestVote Receive ---> node:0, term:14, state:FOLLOWER, args:&{Term:15 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
- CheckElection ---> Timeout! node:1, term:1, state:LEADER 
-Node:1 is leader now
- CheckElection ---> Timeout! node:2, term:15, state:CANDIDATE 
-RequestVote Receive ---> node:0, term:15, state:FOLLOWER, args:&{Term:16 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
- CheckElection ---> Timeout! node:1, term:1, state:LEADER 
-Node:1 is leader now
- CheckElection ---> Timeout! node:0, term:16, state:FOLLOWER 
-RequestVote Receive ---> node:2, term:16, state:CANDIDATE, args:&{Term:17 CandidateId:0 LastLogIndex:0 LastLogTerm:0}
- CheckElection ---> Timeout! node:2, term:17, state:FOLLOWER 
-RequestVote Receive ---> node:0, term:17, state:CANDIDATE, args:&{Term:18 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
- CheckElection ---> Timeout! node:1, term:1, state:LEADER 
-Node:1 is leader now
- CheckElection ---> Timeout! node:1, term:1, state:LEADER 
-Node:1 is leader now
- CheckElection ---> Timeout! node:2, term:18, state:CANDIDATE 
-RequestVote Receive ---> node:0, term:18, state:FOLLOWER, args:&{Term:19 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
- CheckElection ---> Timeout! node:2, term:19, state:CANDIDATE 
-RequestVote Receive ---> node:0, term:19, state:FOLLOWER, args:&{Term:20 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
- CheckElection ---> Timeout! node:1, term:1, state:LEADER 
-Node:1 is leader now
- CheckElection ---> Timeout! node:1, term:1, state:LEADER 
-Node:1 is leader now
- CheckElection ---> Timeout! node:2, term:20, state:CANDIDATE 
-RequestVote Receive ---> node:0, term:20, state:FOLLOWER, args:&{Term:21 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
- CheckElection ---> Timeout! node:1, term:1, state:LEADER 
-Node:1 is leader now
- CheckElection ---> Timeout! node:2, term:21, state:CANDIDATE 
-RequestVote Receive ---> node:0, term:21, state:FOLLOWER, args:&{Term:22 CandidateId:2 LastLogIndex:0 LastLogTerm:0}
- CheckElection ---> Timeout! node:0, term:22, state:FOLLOWER 
-RequestVote Receive ---> node:2, term:22, state:CANDIDATE, args:&{Term:23 CandidateId:0 LastLogIndex:0 LastLogTerm:0}
- CheckElection ---> Timeout! node:1, term:1, state:LEADER 
-Node:1 is leader now
- CheckElection ---> Timeout! node:1, term:1, state:LEADER 
-Node:1 is leader now
---- FAIL: TestReElection2A (5.57s)
-    config.go:330: expected one leader, got none
-FAIL
-exit status 1
-FAIL	_/home/shuai/Projects/6.824/src/raft	8.730s
+AppendEntries Receive ---> node:0, term:11, state:LEADER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:0, term:11, state:LEADER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:2 LeaderId:1 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+Node:0 is leader now
+AppendEntries Receive ---> node:1, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+Node:0 is leader now
+AppendEntries Receive ---> node:1, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:1, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+AppendEntries Receive ---> node:2, term:11, state:FOLLOWER, args:&{Term:11 LeaderId:0 PrevLogIndex:0 PrevLogTerm:0 Entries:[] LeaderCommitIndex:0}
+  ... Passed --  real time: 4.6  number of Raft peers:3 number of RPC sends: 510 number of bytes: 111470 number of Raft agreements reported:   0
+PASS
+ok  	_/home/shuai/Projects/6.824/src/raft	7.634s

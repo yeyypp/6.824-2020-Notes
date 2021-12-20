@@ -57,7 +57,7 @@ type ApplyMsg struct {
 type Entry struct {
 	Index   int
 	Term    int
-	Command string
+	Command interface{}
 }
 
 //
@@ -330,13 +330,35 @@ func (rf *Raft) sendAppendEntries(server int, args *AppendEntriesArgs, reply *Ap
 //
 func (rf *Raft) Start(command interface{}) (int, int, bool) {
 	fun := "Start --->"
-	index := -1
-	term := -1
-	isLeader := true
+	rf.mu.Lock()
+	defer rf.mu.Unlock()
 
-	fmt.Printf("%s node:%d, term:%d, state:%s, command:%v\n", fun, rf.me, rf.currentTerm, rf.state, command)
+	index := len(rf.log) + 1
+	term := rf.currentTerm
+	isLeader := rf.state == LEADER
+	if !isLeader {
+		return index, term, isLeader
+	}
 
+	DPrintf("%s node:%d, term:%d, index:%d, state:%s", fun, rf.me, index, term, rf.state)
 	// Your code here (2B).
+	args := AppendEntriesArgs{}
+	reply := AppendEntriesReply{}
+
+	prevLogIndex := len(rf.log)
+	args.Term = term
+	args.LeaderId = rf.me
+	args.LeaderCommitIndex = rf.commitIndex
+	args.PrevLogIndex = prevLogIndex
+	if prevLogIndex != 0 {
+		args.PrevLogTerm = rf.log[prevLogIndex - 1].Term
+	}
+
+	entry := &Entry{}
+	entry.Index = index
+	entry.Term = term
+	entry.Command = command
+
 
 	return index, term, isLeader
 }
@@ -405,7 +427,6 @@ func Make(peers []*labrpc.ClientEnd, me int,
 
 // TODO send log in order on applyCh
 func (rf *Raft) checkElection() {
-	fun := "CheckElection --->"
 
 	for !rf.killed() {
 		timeout := time.Duration(rf.getElectionTimeout()) * time.Millisecond
@@ -416,7 +437,6 @@ func (rf *Raft) checkElection() {
 		rf.mu.Unlock()
 
 		if time.Now().Sub(lastElectionTime) >= timeout {
-			fmt.Printf(" %s Timeout! node:%d, term:%d, state:%s \n", fun, rf.me, rf.currentTerm, rf.state)
 			switch state {
 			case FOLLOWER:
 				go rf.reElection()
@@ -442,7 +462,9 @@ func (rf *Raft) reElection() {
 	var sendingLastLogTerm int
 	var sendingLastLogIndex int
 
+	fun := "ReElection --->"
 	rf.mu.Lock()
+	fmt.Printf(" %s node:%d, term:%d, state:%s \n", fun, rf.me, rf.currentTerm, rf.state)
 	rf.currentTerm += 1
 	sendingTerm = rf.currentTerm
 	if len(rf.log) != 0 {
@@ -589,7 +611,8 @@ func (rf *Raft) reElection() {
 				if reply.VoteGranted {
 					atomic.AddUint64(&count, 1)
 					v := atomic.LoadUint64(&count)
-					if v > uint64((len(rf.peers) - 1)/2){
+					// TODO why this
+					if v > uint64((len(rf.peers)/2 - 1)) {
 						rf.mu.Lock()
 						rf.state = LEADER
 						go rf.sendHeartBeat()
