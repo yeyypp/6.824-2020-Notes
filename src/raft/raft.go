@@ -189,7 +189,7 @@ type AppendEntriesReply struct {
 func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 
 	// Your code here (2A, 2B).
-	fun := "RequestVote Receive --->"
+	fun := "RequestVote Received --->"
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
 	if rf.killed() {
@@ -216,28 +216,6 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 		return
 	}
 
-	//if rf.votedFor == -1 {
-	//	rf.grantVote(reply, args.CandidateId)
-	//	return
-	//}
-	//
-	//n := len(rf.log)
-	//if rf.votedFor == args.CandidateId {
-	//	if n == 0 || rf.log[n-1].Term < args.LastLogTerm || (rf.log[n-1].Term == args.LastLogTerm &&
-	//		n < args.LastLogIndex) {
-	//		rf.grantVote(reply, args.CandidateId)
-	//		return
-	//	}
-	//}
-
-	//if rf.votedFor == -1 || rf.votedFor == args.CandidateId {
-	//	reply.VoteGranted = true
-	//	rf.votedFor = args.CandidateId
-	//	rf.lastElectionTime = time.Now()
-	//	reply.Term = rf.currentTerm
-	//	return
-	//}
-
 	reply.Term = rf.currentTerm
 	reply.VoteGranted = false
 
@@ -245,13 +223,15 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 
 func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply) {
 
-	fun := "AppendEntries Receive --->"
+	fun := "AppendEntries Received --->"
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
 	if rf.killed() {
 		return
 	}
+
 	fmt.Printf("%s node:%d, term:%d, state:%s, args:%+v\n", fun, rf.me, rf.currentTerm, rf.state, args)
+
 
 	if args.Term < rf.currentTerm {
 		reply.Term = rf.currentTerm
@@ -299,6 +279,26 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 	//you may apply incorrect entries.
 	if args.LeaderCommitIndex > rf.commitIndex {
 		rf.commitIndex = min(args.LeaderCommitIndex, len(rf.log))
+		if rf.commitIndex > rf.lastApplied {
+			for rf.commitIndex > rf.lastApplied {
+				rf.applyCh <- ApplyMsg{
+					CommandValid: true,
+					Command: rf.log[rf.lastApplied + 1 - 1].Command,
+					CommandIndex: rf.lastApplied + 1,
+				}
+				rf.lastApplied += 1
+			}
+			//commitIndex, lastApplied := rf.commitIndex, rf.lastApplied
+			//go func() {
+			//	for commitIndex > lastApplied {
+			//		rf.applyCh <- ApplyMsg{
+			//			CommandValid: true,
+			//			Command: rf.log[lastApplied + 1 - 1].Command,
+			//			CommandIndex: lastApplied + 1,
+			//		}
+			//	}
+			//}()
+		}
 	}
 
 	reply.Term = rf.currentTerm
@@ -515,6 +515,7 @@ func (rf *Raft) reElection() {
 			rf.mu.Lock()
 			defer rf.mu.Unlock()
 
+			// Only if the two terms are the same should you continue processing the reply.
 			if reply.Term < rf.currentTerm {
 				return
 			}
@@ -534,7 +535,12 @@ func (rf *Raft) reElection() {
 				// Can tolerate at most f nodes fail if there are 2f + 1 nodes
 				// when count the majority, the number of all nodes include fail nodes, and the vote include itself.
 				if v > uint64(len(rf.peers)/2-1) {
+					fmt.Printf("%d becomes leader!\n", rf.me)
 					rf.state = LEADER
+					for i := 0; i < len(rf.peers); i++ {
+						rf.nextIndex[i] = len(rf.log) + 1
+						rf.matchIndex[i] = 0
+					}
 					go rf.sendHeartBeat()
 					return
 				}
@@ -581,12 +587,13 @@ func (rf *Raft) sendHeartBeat() {
 				args.LeaderId = rf.me
 				args.Term = rf.currentTerm
 				args.LeaderCommitIndex = rf.commitIndex
-				args.PrevLogIndex = rf.nextIndex[i] - 1
+				args.PrevLogIndex = rf.nextIndex[peer] - 1
 				if args.PrevLogIndex > 0 {
 					args.PrevLogTerm = rf.log[args.PrevLogIndex-1].Term
 				}
-				if len(rf.log) >= rf.nextIndex[i] {
-					args.Entries = rf.log[rf.nextIndex[i]-1:]
+
+				if len(rf.log) != 0 && len(rf.log) >= rf.nextIndex[peer] {
+					args.Entries = rf.log[rf.nextIndex[peer]-1:]
 				}
 				rf.mu.Unlock()
 
@@ -597,11 +604,11 @@ func (rf *Raft) sendHeartBeat() {
 				rf.mu.Lock()
 				defer rf.mu.Unlock()
 
+				// Only if the two terms are the same should you continue processing the reply.
 				if reply.Term < rf.currentTerm {
 					return
 				}
 
-				// TODO continue processing before return ?
 				if reply.Term > rf.currentTerm {
 					rf.changeToFollower(reply.Term)
 					return
@@ -609,23 +616,47 @@ func (rf *Raft) sendHeartBeat() {
 
 				if rf.state == LEADER {
 					if reply.Success {
-						rf.nextIndex[i] = args.PrevLogIndex + len(args.Entries)
-						rf.matchIndex[i] = rf.nextIndex[i] - 1
+						rf.nextIndex[peer] = args.PrevLogIndex + len(args.Entries) + 1
+						rf.matchIndex[peer] = args.PrevLogIndex + len(args.Entries)
 
-						match := rf.matchIndex[i]
-						var count int
-						for j := 0; j < len(rf.peers); j++ {
-							if rf.matchIndex[j] >= match {
-								count++
-							}
-							// TODO is this formula correct ?
-							if count > (len(rf.peers)-1)/2 && rf.currentTerm == rf.log[match-1].Term {
-								rf.commitIndex = max(match, rf.commitIndex)
+						match := rf.matchIndex[peer]
+						if match != 0 {
+							var count int
+							for j := 0; j < len(rf.peers); j++ {
+								if rf.matchIndex[j] >= match {
+									count++
+								}
+								// TODO is this formula correct ?
+								if count > (len(rf.peers)-1)/2 && rf.currentTerm == rf.log[match-1].Term {
+									rf.commitIndex = max(match, rf.commitIndex)
+
+									for rf.commitIndex > rf.lastApplied {
+										rf.applyCh <- ApplyMsg{
+											CommandValid: true,
+											Command: rf.log[rf.lastApplied + 1 - 1].Command,
+											CommandIndex: rf.lastApplied + 1,
+										}
+										rf.lastApplied += 1
+									}
+									break
+
+									//commitIndex, lastApplied := rf.commitIndex, rf.lastApplied
+									//go func() {
+									//	for commitIndex > lastApplied {
+									//		rf.applyCh <- ApplyMsg{
+									//			CommandValid: true,
+									//			Command: rf.log[lastApplied + 1 - 1].Command,
+									//			CommandIndex: lastApplied + 1,
+									//		}
+									//	}
+									//}()
+									//break
+								}
 							}
 						}
 					} else {
 						// TODO optimization
-						rf.nextIndex[i] -= 1
+						rf.nextIndex[peer] -= 1
 					}
 				}
 			}(i)
