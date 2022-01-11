@@ -19,7 +19,6 @@ package raft
 
 import (
 	"../labrpc"
-	"fmt"
 	"math/rand"
 	"sync"
 	"sync/atomic"
@@ -195,7 +194,7 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	if rf.killed() {
 		return
 	}
-	fmt.Printf("%s node:%d, term:%d, state:%s, args:%+v\n", fun, rf.me, rf.currentTerm, rf.state, args)
+	DPrintf("%s node:%d, term:%d, state:%s, args:%+v\n", fun, rf.me, rf.currentTerm, rf.state, args)
 
 	// Candidate term < currentTerm, return false
 	if args.Term < rf.currentTerm {
@@ -230,7 +229,7 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 		return
 	}
 
-	fmt.Printf("%s node:%d, term:%d, state:%s, args:%+v\n", fun, rf.me, rf.currentTerm, rf.state, args)
+	DPrintf("%s node:%d, term:%d, state:%s, args:%+v\n", fun, rf.me, rf.currentTerm, rf.state, args)
 
 
 	if args.Term < rf.currentTerm {
@@ -288,16 +287,7 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 				}
 				rf.lastApplied += 1
 			}
-			//commitIndex, lastApplied := rf.commitIndex, rf.lastApplied
-			//go func() {
-			//	for commitIndex > lastApplied {
-			//		rf.applyCh <- ApplyMsg{
-			//			CommandValid: true,
-			//			Command: rf.log[lastApplied + 1 - 1].Command,
-			//			CommandIndex: lastApplied + 1,
-			//		}
-			//	}
-			//}()
+
 		}
 	}
 
@@ -460,7 +450,7 @@ func (rf *Raft) checkElection() {
 			case CANDIDATE:
 				go rf.reElection()
 			case LEADER:
-				fmt.Printf("Node:%d is leader now\n", rf.me)
+				DPrintf("Node:%d is leader now\n", rf.me)
 			}
 		}
 	}
@@ -535,7 +525,7 @@ func (rf *Raft) reElection() {
 				// Can tolerate at most f nodes fail if there are 2f + 1 nodes
 				// when count the majority, the number of all nodes include fail nodes, and the vote include itself.
 				if v > uint64(len(rf.peers)/2-1) {
-					fmt.Printf("%d becomes leader!\n", rf.me)
+					DPrintf("%d becomes leader!\n", rf.me)
 					rf.state = LEADER
 					for i := 0; i < len(rf.peers); i++ {
 						rf.nextIndex[i] = len(rf.log) + 1
@@ -621,8 +611,11 @@ func (rf *Raft) sendHeartBeat() {
 
 						match := rf.matchIndex[peer]
 						if match != 0 {
-							var count int
+							count := 1
 							for j := 0; j < len(rf.peers); j++ {
+								if j == rf.me {
+									continue
+								}
 								if rf.matchIndex[j] >= match {
 									count++
 								}
@@ -639,18 +632,6 @@ func (rf *Raft) sendHeartBeat() {
 										rf.lastApplied += 1
 									}
 									break
-
-									//commitIndex, lastApplied := rf.commitIndex, rf.lastApplied
-									//go func() {
-									//	for commitIndex > lastApplied {
-									//		rf.applyCh <- ApplyMsg{
-									//			CommandValid: true,
-									//			Command: rf.log[lastApplied + 1 - 1].Command,
-									//			CommandIndex: lastApplied + 1,
-									//		}
-									//	}
-									//}()
-									//break
 								}
 							}
 						}

@@ -370,7 +370,7 @@ func (cfg *config) nCommitted(index int) (int, interface{}) {
 
 		cfg.mu.Lock()
 		cmd1, ok := cfg.logs[i][index]
-		fmt.Printf("node:%d, index:%d, cmd1:%v, ok:%v\n", i, index, cmd1, ok)
+		//fmt.Printf("node:%d, index:%d, cmd1:%v, ok:%v\n", i, index, cmd1, ok)
 		cfg.mu.Unlock()
 
 		if ok {
@@ -445,8 +445,8 @@ func (cfg *config) one(cmd interface{}, expectedServers int, retry bool) int {
 			if rf != nil {
 				index1, _, ok := rf.Start(cmd)
 				if ok {
-					term, leader := rf.GetState()
-					fmt.Printf("node:%d, term:%d, leader:%v, index change from %d to %d\n", rf.me, term, leader, index, index1)
+					//term, leader := rf.GetState()
+					//fmt.Printf("node:%d, term:%d, leader:%v, index change from %d to %d\n", rf.me, term, leader, index, index1)
 					index = index1
 					break
 				}
@@ -459,7 +459,7 @@ func (cfg *config) one(cmd interface{}, expectedServers int, retry bool) int {
 			t1 := time.Now()
 			for time.Since(t1).Seconds() < 2 {
 				nd, cmd1 := cfg.nCommitted(index)
-				fmt.Printf("nd: %d, expectedServers:%d, index:%d\n", nd, expectedServers, index)
+				//fmt.Printf("nd: %d, expectedServers:%d, index:%d\n", nd, expectedServers, index)
 				if nd > 0 && nd >= expectedServers {
 					// committed
 					if cmd1 == cmd {
