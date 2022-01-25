@@ -177,6 +177,7 @@ type AppendEntriesArgs struct {
 }
 
 type AppendEntriesReply struct {
+	Index int
 	Term int
 	// true means follower contained entry matching prevLogIndex and prevLogTerm
 	Success bool
@@ -245,6 +246,24 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 	//If you get an AppendEntries RPC with a prevLogIndex that points beyond the end of your log,
 	//you should handle it the same as if you did have that entry but the term did not match (i.e., reply false).
 	if args.PrevLogIndex != 0 && (len(rf.log) < args.PrevLogIndex || rf.log[args.PrevLogIndex-1].Term != args.PrevLogTerm) {
+		//fmt.Printf("len(rf.log):%d, args.PrevLogIndex:%d\n", len(rf.log), args.PrevLogIndex)
+		//for _, v := range rf.log {
+		//	fmt.Printf("index:%d, term:%d, command:%v\n", v.Index, v.Term, v.Command)
+		//}
+		if len(rf.log) < args.PrevLogIndex {
+			reply.Index = len(rf.log) + 1
+		} else {
+			term := rf.log[args.PrevLogIndex - 1].Term
+			var i int
+			for i = args.PrevLogIndex - 1; i >= 0; i-- {
+				if rf.log[i].Term != term {
+					reply.Index = rf.log[i].Index + 1
+				}
+			}
+			if i < 0 {
+				reply.Index = 1
+			}
+		}
 		reply.Term = rf.currentTerm
 		reply.Success = false
 		rf.lastElectionTime = time.Now()
@@ -257,13 +276,14 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 		if e.Index > len(rf.log) {
 			rf.log = append(rf.log, args.Entries...)
 		} else {
-			for _, v := range args.Entries {
+			for i, v := range args.Entries {
 				if rf.log[v.Index-1].Term != v.Term {
 					rf.log = rf.log[:v.Index-1]
-					rf.log = append(rf.log, args.Entries...)
+					rf.log = append(rf.log, args.Entries[i:]...)
 					break
 				}
 			}
+
 		}
 	}
 
@@ -285,6 +305,11 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 					Command: rf.log[rf.lastApplied + 1 - 1].Command,
 					CommandIndex: rf.lastApplied + 1,
 				}
+				//fmt.Printf("AE server:%d, term:%d, state:%v, CommandIndex:%d, Command:%v\n", rf.me, rf.currentTerm, rf.state, rf.lastApplied + 1,
+				//	rf.log[rf.lastApplied].Command)
+				//for _, v := range rf.log {
+				//	fmt.Printf("index:%d, term:%d, command:%v\n", v.Index, v.Term, v.Command)
+				//}
 				rf.lastApplied += 1
 			}
 
@@ -629,6 +654,11 @@ func (rf *Raft) sendHeartBeat() {
 											Command: rf.log[rf.lastApplied + 1 - 1].Command,
 											CommandIndex: rf.lastApplied + 1,
 										}
+										//fmt.Printf("SE server:%d, term:%d, state:%v, CommandIndex:%d, Command:%v\n", rf.me, rf.currentTerm, rf.state, rf.lastApplied + 1,
+										//	rf.log[rf.lastApplied].Command)
+										//for _, v := range rf.log {
+										//	fmt.Printf("index:%d, term:%d, command:%v\n", v.Index, v.Term, v.Command)
+										//}
 										rf.lastApplied += 1
 									}
 									break
@@ -636,8 +666,8 @@ func (rf *Raft) sendHeartBeat() {
 							}
 						}
 					} else {
-						// TODO optimization
-						rf.nextIndex[peer] -= 1
+						rf.nextIndex[peer] = reply.Index
+						//fmt.Printf("rf.nextIndex[%d]:%d, reply.Index:%d\n", peer, rf.nextIndex[peer], reply.Index)
 					}
 				}
 			}(i)
