@@ -18,7 +18,9 @@ package raft
 //
 
 import (
+	"../labgob"
 	"../labrpc"
+	"bytes"
 	"math/rand"
 	"sync"
 	"sync/atomic"
@@ -115,12 +117,14 @@ func (rf *Raft) GetState() (int, bool) {
 func (rf *Raft) persist() {
 	// Your code here (2C).
 	// Example:
-	// w := new(bytes.Buffer)
-	// e := labgob.NewEncoder(w)
-	// e.Encode(rf.xxx)
-	// e.Encode(rf.yyy)
-	// data := w.Bytes()
-	// rf.persister.SaveRaftState(data)
+
+	w := new(bytes.Buffer)
+	e := labgob.NewEncoder(w)
+	e.Encode(rf.currentTerm)
+	e.Encode(rf.votedFor)
+	e.Encode(rf.log)
+	data := w.Bytes()
+	rf.persister.SaveRaftState(data)
 }
 
 //
@@ -132,17 +136,20 @@ func (rf *Raft) readPersist(data []byte) {
 	}
 	// Your code here (2C).
 	// Example:
-	// r := bytes.NewBuffer(data)
-	// d := labgob.NewDecoder(r)
-	// var xxx
-	// var yyy
-	// if d.Decode(&xxx) != nil ||
-	//    d.Decode(&yyy) != nil {
-	//   error...
-	// } else {
-	//   rf.xxx = xxx
-	//   rf.yyy = yyy
-	// }
+	r := bytes.NewBuffer(data)
+	d := labgob.NewDecoder(r)
+	var currentTerm int
+	var votedFor int
+	var log []*Entry
+	if d.Decode(&currentTerm) != nil ||
+	   d.Decode(&votedFor) != nil ||
+		d.Decode(&log) != nil {
+	  DPrintf("decode error")
+	} else {
+	  rf.currentTerm = currentTerm
+	  rf.votedFor = votedFor
+	  rf.log = log
+	}
 }
 
 //
@@ -207,12 +214,14 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	// if args.term > currentTerm, update term, clear votedFor
 	if args.Term > rf.currentTerm {
 		rf.changeToFollower(args.Term)
+		rf.persist()
 	}
 
 	lastLogIndex, lastLogTerm := rf.getLastLogTermAndIndex()
 
 	if (rf.votedFor == -1 || rf.votedFor == args.CandidateId) && (args.LastLogTerm > lastLogTerm || (args.LastLogTerm == lastLogTerm && args.LastLogIndex >= lastLogIndex)) {
 		rf.grantVote(reply, args.CandidateId)
+		rf.persist()
 		return
 	}
 
@@ -241,6 +250,7 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 
 	if args.Term > rf.currentTerm || rf.state == CANDIDATE {
 		rf.changeToFollower(args.Term)
+		rf.persist()
 	}
 
 	//If you get an AppendEntries RPC with a prevLogIndex that points beyond the end of your log,
@@ -277,14 +287,23 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 			rf.log = append(rf.log, args.Entries...)
 		} else {
 			for i, v := range args.Entries {
-				if rf.log[v.Index-1].Term != v.Term {
+				if v.Index <= len(rf.log) && rf.log[v.Index - 1].Term != v.Term {
 					rf.log = rf.log[:v.Index-1]
 					rf.log = append(rf.log, args.Entries[i:]...)
 					break
 				}
+				if v.Index > len(rf.log) {
+					rf.log = append(rf.log, args.Entries[i:]...)
+					break
+				}
+				//if rf.log[v.Index-1].Term != v.Term {
+				//	rf.log = rf.log[:v.Index-1]
+				//	rf.log = append(rf.log, args.Entries[i:]...)
+				//	break
+				//}
 			}
-
 		}
+		rf.persist()
 	}
 
 	//The min in the final step (#5) of AppendEntries is necessary,
@@ -391,7 +410,7 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 	e.Index = len(rf.log) + 1
 	e.Command = command
 	rf.log = append(rf.log, e)
-
+	rf.persist()
 	return index, term, isLeader
 }
 
@@ -492,6 +511,7 @@ func (rf *Raft) reElection() {
 	rf.currentTerm += 1
 	sendingTerm = rf.currentTerm
 	rf.votedFor = rf.me
+	rf.persist()
 	rf.state = CANDIDATE
 	rf.lastElectionTime = time.Now()
 	rf.mu.Unlock()
@@ -537,6 +557,7 @@ func (rf *Raft) reElection() {
 
 			if reply.Term > rf.currentTerm {
 				rf.changeToFollower(reply.Term)
+				rf.persist()
 				return
 			}
 
@@ -626,6 +647,7 @@ func (rf *Raft) sendHeartBeat() {
 
 				if reply.Term > rf.currentTerm {
 					rf.changeToFollower(reply.Term)
+					rf.persist()
 					return
 				}
 
