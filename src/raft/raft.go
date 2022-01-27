@@ -476,7 +476,6 @@ func Make(peers []*labrpc.ClientEnd, me int,
 	return rf
 }
 
-// TODO send log in order on applyCh
 func (rf *Raft) checkElection() {
 
 	for !rf.killed() {
