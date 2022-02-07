@@ -652,6 +652,24 @@ func (rf *Raft) sendHeartBeat() {
 
 				if rf.state == LEADER {
 					if reply.Success {
+
+						//While nextIndex and matchIndex are generally updated at the same time to a similar value
+						//(specifically, nextIndex = matchIndex + 1), the two serve quite different purposes.
+						//nextIndex is a guess as to what prefix the leader shares with a given follower.
+						//It is generally quite optimistic (we share everything), and is moved backwards only on negative responses.
+						//For example, when a leader has just been elected, nextIndex is set to be index index at the end of the log.
+						//In a way, nextIndex is used for performance – you only need to send these things to this peer.
+						//
+						//	matchIndex is used for safety.
+						//	It is a conservative measurement of what prefix of the log the leader shares with a given follower.
+						//	matchIndex cannot ever be set to a value that is too high,
+						//	as this may cause the commitIndex to be moved too far forward.
+						//	This is why matchIndex is initialized to -1 (i.e., we agree on no prefix),
+						//	and only updated when a follower positively acknowledges an AppendEntries RPC.
+
+						if len(args.Entries) == 0 {
+							return
+						}
 						rf.nextIndex[peer] = args.PrevLogIndex + len(args.Entries) + 1
 						rf.matchIndex[peer] = args.PrevLogIndex + len(args.Entries)
 
@@ -665,7 +683,6 @@ func (rf *Raft) sendHeartBeat() {
 								if rf.matchIndex[j] >= match {
 									count++
 								}
-								// TODO is this formula correct ?
 								if count > (len(rf.peers)-1)/2 && rf.currentTerm == rf.log[match-1].Term {
 									rf.commitIndex = max(match, rf.commitIndex)
 
