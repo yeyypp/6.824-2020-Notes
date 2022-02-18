@@ -5,3 +5,5 @@ A self-learning repository of [6.824-2020](https://pdos.csail.mit.edu/6.824/sche
   - [X] 2A
   - [X] 2B
   - [X] 2C
+- [ ] Lab3
+- [ ] Lab4
